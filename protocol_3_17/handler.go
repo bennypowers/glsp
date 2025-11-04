@@ -14,6 +14,7 @@ type Handler struct {
 
 	Initialize             InitializeFunc
 	TextDocumentDiagnostic TextDocumentDiagnosticFunc
+	TextDocumentInlayHint  TextDocumentInlayHintFunc
 
 	initialized bool
 	lock        sync.Mutex
@@ -649,6 +650,16 @@ func (self *Handler) Handle(context *glsp.Context) (r any, validMethod bool, val
 			}
 		}
 
+	case MethodTextDocumentInlayHint:
+		if self.TextDocumentInlayHint != nil {
+			validMethod = true
+			var params InlayHintParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.TextDocumentInlayHint(context, &params)
+			}
+		}
+
 	default:
 		if self.CustomRequest != nil {
 			if handler, ok := self.CustomRequest[context.Method]; ok && (handler.Func != nil) {
@@ -917,6 +928,10 @@ func (self *Handler) CreateServerCapabilities() ServerCapabilities {
 			InterFileDependencies: true,
 			WorkspaceDiagnostics:  false,
 		}
+	}
+
+	if self.TextDocumentInlayHint != nil {
+		capabilities.InlayHintProvider = true
 	}
 
 	return capabilities

@@ -52,6 +52,13 @@ type ServerCapabilities struct {
 	 * @since 3.17.0
 	 */
 	DiagnosticProvider any `json:"diagnosticProvider,omitempty"` // nil | DiagnosticOptions | DiagnosticRegistrationOptions
+
+	/**
+	 * The server provides inlay hints.
+	 *
+	 * @since 3.17.0
+	 */
+	InlayHintProvider any `json:"inlayHintProvider,omitempty"` // nil | bool | InlayHintOptions | InlayHintRegistrationOptions
 }
 
 func (self *ServerCapabilities) UnmarshalJSON(data []byte) error {
@@ -86,6 +93,7 @@ func (self *ServerCapabilities) UnmarshalJSON(data []byte) error {
 		Workspace                        *protocol316.ServerCapabilitiesWorkspace     `json:"workspace,omitempty"`
 		Experimental                     *any                                         `json:"experimental,omitempty"`
 		DiagnosticProvider               json.RawMessage                              `json:"diagnosticProvider,omitempty"` // nil | DiagnosticOptions | DiagnosticRegistrationOptions
+		InlayHintProvider                json.RawMessage                              `json:"inlayHintProvider,omitempty"`  // nil | bool | InlayHintOptions | InlayHintRegistrationOptions
 	}
 
 	if err := json.Unmarshal(data, &value); err == nil {
@@ -447,6 +455,15 @@ func (self *ServerCapabilities) UnmarshalJSON(data []byte) error {
 				} else {
 					return err
 				}
+			}
+		}
+
+		if value.InlayHintProvider != nil {
+			var value_ bool
+			if err = json.Unmarshal(value.InlayHintProvider, &value_); err == nil {
+				self.InlayHintProvider = value_
+			} else {
+				return err
 			}
 		}
 
