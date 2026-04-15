@@ -1078,5 +1078,9 @@ func (self *Handler) CreateServerCapabilities() ServerCapabilities {
 		}
 	}
 
+	if self.TextDocumentInlayHint != nil {
+		capabilities.InlayHintProvider = true
+	}
+
 	return capabilities
 }
