@@ -127,7 +127,7 @@ type VersionedNotebookDocumentIdentifier struct {
  */
 type NotebookCellArrayChange struct {
 	/**
-	 * The start oftest of the cell that changed.
+	 * The start offset of the cell that changed.
 	 */
 	Start UInteger `json:"start"`
 

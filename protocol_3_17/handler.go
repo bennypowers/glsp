@@ -14,6 +14,7 @@ type Handler struct {
 
 	Initialize             InitializeFunc
 	TextDocumentDiagnostic TextDocumentDiagnosticFunc
+	WorkspaceDiagnostic    WorkspaceDiagnosticFunc
 
 	// Type Hierarchy - @since 3.17.0
 	TextDocumentPrepareTypeHierarchy TextDocumentPrepareTypeHierarchyFunc
@@ -667,6 +668,16 @@ func (self *Handler) Handle(context *glsp.Context) (r any, validMethod bool, val
 			}
 		}
 
+	case MethodWorkspaceDiagnostic:
+		if self.WorkspaceDiagnostic != nil {
+			validMethod = true
+			var params WorkspaceDiagnosticParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.WorkspaceDiagnostic(context, &params)
+			}
+		}
+
 	// Type Hierarchy - @since 3.17.0
 	case MethodTextDocumentPrepareTypeHierarchy:
 		if self.TextDocumentPrepareTypeHierarchy != nil {
@@ -1035,7 +1046,7 @@ func (self *Handler) CreateServerCapabilities() ServerCapabilities {
 	if self.TextDocumentDiagnostic != nil {
 		capabilities.DiagnosticProvider = DiagnosticOptions{
 			InterFileDependencies: true,
-			WorkspaceDiagnostics:  false,
+			WorkspaceDiagnostics:  self.WorkspaceDiagnostic != nil,
 		}
 	}
 

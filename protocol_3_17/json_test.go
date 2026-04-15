@@ -51,7 +51,7 @@ func TestTypeHierarchyItemJSONSerialization(t *testing.T) {
 		Range:          Range{Start: Position{Line: 0, Character: 0}, End: Position{Line: 10, Character: 0}},
 		SelectionRange: Range{Start: Position{Line: 0, Character: 0}, End: Position{Line: 0, Character: 9}},
 		Detail:         stringPtr("A test class"),
-		Data:           map[string]interface{}{"test": "data"},
+		Data:           map[string]any{"test": "data"},
 	}
 
 	// Test round-trip serialization
@@ -75,6 +75,9 @@ func TestTypeHierarchyItemJSONSerialization(t *testing.T) {
 	}
 	if decoded.URI != original.URI {
 		t.Errorf("URI mismatch: expected %s, got %s", original.URI, decoded.URI)
+	}
+	if decoded.Detail == nil {
+		t.Fatal("Detail should not be nil after unmarshaling")
 	}
 	if *decoded.Detail != *original.Detail {
 		t.Errorf("Detail mismatch: expected %s, got %s", *original.Detail, *decoded.Detail)
@@ -167,6 +170,9 @@ func TestInlineValueJSONSerialization(t *testing.T) {
 		t.Fatalf("Failed to unmarshal InlineValueVariableLookup: %v", err)
 	}
 
+	if decodedLookup.VariableName == nil {
+		t.Fatal("VariableName should not be nil after unmarshaling")
+	}
 	if *decodedLookup.VariableName != *variableLookup.VariableName {
 		t.Errorf("VariableName mismatch: expected %s, got %s", *variableLookup.VariableName, *decodedLookup.VariableName)
 	}
@@ -181,7 +187,7 @@ func TestNotebookDocumentJSONSerialization(t *testing.T) {
 			{
 				Kind:     1, // NotebookCellKindMarkdown
 				Document: "file:///cell1.md",
-				Metadata: func() *any { m := any(map[string]interface{}{"tags": []string{"markdown"}}); return &m }(),
+				Metadata: func() *any { m := any(map[string]any{"tags": []string{"markdown"}}); return &m }(),
 			},
 			{
 				Kind:     2, // NotebookCellKindCode
@@ -217,6 +223,9 @@ func TestNotebookDocumentJSONSerialization(t *testing.T) {
 		t.Errorf("First cell kind mismatch: expected %d, got %d", 1, decoded.Cells[0].Kind)
 	}
 
+	if decoded.Cells[1].ExecutionSummary == nil {
+		t.Fatal("ExecutionSummary should not be nil after unmarshaling")
+	}
 	if decoded.Cells[1].ExecutionSummary.ExecutionOrder != 1 {
 		t.Errorf("ExecutionOrder mismatch: expected 1, got %d", decoded.Cells[1].ExecutionSummary.ExecutionOrder)
 	}
@@ -339,11 +348,84 @@ func TestClientCapabilitiesJSONSerialization(t *testing.T) {
 	}
 }
 
+func TestWorkspaceDiagnosticJSONSerialization(t *testing.T) {
+	// Test WorkspaceDiagnosticParams roundtrip
+	params := WorkspaceDiagnosticParams{
+		Identifier: stringPtr("go-lsp"),
+		PreviousResultIds: []PreviousResultId{
+			{URI: "file:///a.go", Value: "result-1"},
+			{URI: "file:///b.go", Value: "result-2"},
+		},
+	}
+
+	data, err := json.Marshal(params)
+	if err != nil {
+		t.Fatalf("Failed to marshal WorkspaceDiagnosticParams: %v", err)
+	}
+
+	var decodedParams WorkspaceDiagnosticParams
+	err = json.Unmarshal(data, &decodedParams)
+	if err != nil {
+		t.Fatalf("Failed to unmarshal WorkspaceDiagnosticParams: %v", err)
+	}
+
+	if *decodedParams.Identifier != *params.Identifier {
+		t.Errorf("Identifier mismatch: expected %s, got %s", *params.Identifier, *decodedParams.Identifier)
+	}
+
+	if len(decodedParams.PreviousResultIds) != 2 {
+		t.Fatalf("PreviousResultIds length mismatch: expected 2, got %d", len(decodedParams.PreviousResultIds))
+	}
+
+	if decodedParams.PreviousResultIds[0].URI != "file:///a.go" {
+		t.Errorf("PreviousResultIds[0].URI mismatch: expected file:///a.go, got %s", decodedParams.PreviousResultIds[0].URI)
+	}
+
+	if decodedParams.PreviousResultIds[1].Value != "result-2" {
+		t.Errorf("PreviousResultIds[1].Value mismatch: expected result-2, got %s", decodedParams.PreviousResultIds[1].Value)
+	}
+
+	// Test WorkspaceDiagnosticReport roundtrip
+	report := WorkspaceDiagnosticReport{
+		Items: []WorkspaceDocumentDiagnosticReport{
+			WorkspaceFullDocumentDiagnosticReport{
+				FullDocumentDiagnosticReport: FullDocumentDiagnosticReport{
+					Kind:     string(DocumentDiagnosticReportKindFull),
+					ResultID: stringPtr("result-3"),
+					Items: []protocol316.Diagnostic{
+						{
+							Range:   protocol316.Range{Start: protocol316.Position{Line: 1, Character: 0}, End: protocol316.Position{Line: 1, Character: 5}},
+							Message: "unused variable",
+						},
+					},
+				},
+				URI:     "file:///a.go",
+				Version: func() *protocol316.Integer { v := protocol316.Integer(3); return &v }(),
+			},
+		},
+	}
+
+	data, err = json.Marshal(report)
+	if err != nil {
+		t.Fatalf("Failed to marshal WorkspaceDiagnosticReport: %v", err)
+	}
+
+	var decodedReport WorkspaceDiagnosticReport
+	err = json.Unmarshal(data, &decodedReport)
+	if err != nil {
+		t.Fatalf("Failed to unmarshal WorkspaceDiagnosticReport: %v", err)
+	}
+
+	if len(decodedReport.Items) != 1 {
+		t.Fatalf("Items length mismatch: expected 1, got %d", len(decodedReport.Items))
+	}
+}
+
 func TestServerCapabilitiesJSONSerialization(t *testing.T) {
 	capabilities := ServerCapabilities{
 		DiagnosticProvider: DiagnosticOptions{
 			InterFileDependencies: true,
-			WorkspaceDiagnostics:  false,
+			WorkspaceDiagnostics:  true,
 			Identifier:            stringPtr("test-server"),
 		},
 		TypeHierarchyProvider: true,

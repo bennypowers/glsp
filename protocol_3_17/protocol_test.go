@@ -2,50 +2,65 @@ package protocol
 
 import (
 	"testing"
+
+	"github.com/tliron/glsp"
 )
 
 func TestHandler317Features(t *testing.T) {
-	handler := &Handler{}
-
-	// Test that the handler has the new 3.17 methods
-	if handler.TextDocumentPrepareTypeHierarchy == nil {
-		// This is expected initially, just testing the field exists
-		t.Log("TextDocumentPrepareTypeHierarchy field exists")
-	}
-
-	if handler.TextDocumentInlineValue == nil {
-		// This is expected initially, just testing the field exists
-		t.Log("TextDocumentInlineValue field exists")
-	}
-
-	if handler.TextDocumentInlayHint == nil {
-		// This is expected initially, just testing the field exists
-		t.Log("TextDocumentInlayHint field exists")
-	}
-
-	// Test that we can create server capabilities
-	capabilities := handler.CreateServerCapabilities()
-
-	// Test position encoding constants exist
+	// Compile-time check that 3.17 constants exist
 	_ = PositionEncodingKindUTF8
 	_ = PositionEncodingKindUTF16
 	_ = PositionEncodingKindUTF32
-
-	// Test new method constants exist
 	_ = MethodTextDocumentPrepareTypeHierarchy
 	_ = MethodTypeHierarchySupertypes
 	_ = MethodTypeHierarchySubtypes
 	_ = MethodTextDocumentInlineValue
 	_ = MethodTextDocumentInlayHint
 	_ = MethodInlayHintResolve
+	_ = MethodTextDocumentDiagnostic
+	_ = MethodWorkspaceDiagnostic
+	_ = MethodWorkspaceDiagnosticRefresh
 
-	t.Log("All LSP 3.17 constants and fields are accessible")
+	// Capabilities without handlers should have nil providers
+	handler := &Handler{}
+	capabilities := handler.CreateServerCapabilities()
+	if capabilities.TypeHierarchyProvider != nil {
+		t.Error("TypeHierarchyProvider should be nil without handler")
+	}
+	if capabilities.InlineValueProvider != nil {
+		t.Error("InlineValueProvider should be nil without handler")
+	}
+	if capabilities.InlayHintProvider != nil {
+		t.Error("InlayHintProvider should be nil without handler")
+	}
+	if capabilities.DiagnosticProvider != nil {
+		t.Error("DiagnosticProvider should be nil without handler")
+	}
 
-	// Test that capabilities can be assigned
-	if capabilities.TypeHierarchyProvider == nil &&
-		capabilities.InlineValueProvider == nil &&
-		capabilities.InlayHintProvider == nil {
-		t.Log("Server capabilities can be set for 3.17 features")
+	// Capabilities with handlers should set providers
+	handler.TextDocumentPrepareTypeHierarchy = func(_ *glsp.Context, _ *TypeHierarchyPrepareParams) ([]TypeHierarchyItem, error) {
+		return nil, nil
+	}
+	handler.TextDocumentDiagnostic = func(_ *glsp.Context, _ *DocumentDiagnosticParams) (any, error) {
+		return nil, nil
+	}
+	handler.WorkspaceDiagnostic = func(_ *glsp.Context, _ *WorkspaceDiagnosticParams) (*WorkspaceDiagnosticReport, error) {
+		return nil, nil
+	}
+	capabilities = handler.CreateServerCapabilities()
+
+	if capabilities.TypeHierarchyProvider == nil {
+		t.Error("TypeHierarchyProvider should be set when handler is registered")
+	}
+	if capabilities.DiagnosticProvider == nil {
+		t.Fatal("DiagnosticProvider should be set when handler is registered")
+	}
+	diagOpts, ok := capabilities.DiagnosticProvider.(DiagnosticOptions)
+	if !ok {
+		t.Fatal("DiagnosticProvider should be DiagnosticOptions")
+	}
+	if !diagOpts.WorkspaceDiagnostics {
+		t.Error("WorkspaceDiagnostics should be true when WorkspaceDiagnostic handler is set")
 	}
 }
 

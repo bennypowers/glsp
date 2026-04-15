@@ -709,7 +709,7 @@ func (self MarkedString) MarshalJSON() ([]byte, error) {
 }
 
 // ([json.Unmarshaler] interface)
-func (self MarkedString) UnmarshalJSON(data []byte) error {
+func (self *MarkedString) UnmarshalJSON(data []byte) error {
 	var value string
 	if err := json.Unmarshal(data, &value); err == nil {
 		self.value = value
@@ -1190,7 +1190,7 @@ type ImplementationOptions struct {
 
 type ImplementationRegistrationOptions struct {
 	TextDocumentRegistrationOptions
-	TypeDefinitionOptions
+	ImplementationOptions
 	StaticRegistrationOptions
 }
 
@@ -2821,7 +2821,7 @@ type SemanticTokensClientCapabilities struct {
 		 * The client will send the `textDocument/semanticTokens/range` request
 		 * if the server provides a corresponding handler.
 		 */
-		Range any `json:"Range,omitempty"` // nil | bool | struct{}
+		Range any `json:"range,omitempty"` // nil | bool | struct{}
 
 		/**
 		 * The client will send the `textDocument/semanticTokens/full` request
@@ -2861,7 +2861,7 @@ func (self *SemanticTokensClientCapabilities) UnmarshalJSON(data []byte) error {
 	var value struct {
 		DynamicRegistration *bool `json:"dynamicRegistration,omitempty"`
 		Requests            struct {
-			Range json.RawMessage `json:"Range,omitempty"` // nil | bool | struct{}
+			Range json.RawMessage `json:"range,omitempty"` // nil | bool | struct{}
 			Full  json.RawMessage `json:"full,omitempty"`  // nil | bool | SemanticDelta
 		} `json:"requests"`
 		TokenTypes              []string      `json:"tokenTypes"`
