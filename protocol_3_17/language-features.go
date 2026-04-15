@@ -537,16 +537,22 @@ func (self *CompletionItem) UnmarshalJSON(data []byte) error {
 		}
 
 		if value.TextEdit != nil {
-			var value_ TextEdit
-			if err = json.Unmarshal(value.TextEdit, &value_); err == nil {
-				self.TextEdit = value_
-			} else {
+			var raw map[string]json.RawMessage
+			if err = json.Unmarshal(value.TextEdit, &raw); err != nil {
+				return err
+			}
+			if _, hasInsert := raw["insert"]; hasInsert {
 				var value_ InsertReplaceEdit
-				if err = json.Unmarshal(value.TextEdit, &value_); err == nil {
-					self.TextEdit = value_
-				} else {
+				if err = json.Unmarshal(value.TextEdit, &value_); err != nil {
 					return err
 				}
+				self.TextEdit = value_
+			} else {
+				var value_ TextEdit
+				if err = json.Unmarshal(value.TextEdit, &value_); err != nil {
+					return err
+				}
+				self.TextEdit = value_
 			}
 		}
 
@@ -2936,12 +2942,14 @@ type SemanticTokensOptions struct {
 // ([json.Unmarshaler] interface)
 func (self *SemanticTokensOptions) UnmarshalJSON(data []byte) error {
 	var value struct {
+		WorkDoneProgressOptions
 		Legend SemanticTokensLegend `json:"legend"`
 		Range  json.RawMessage      `json:"range,omitempty"` // nil | bool | struct{}
 		Full   json.RawMessage      `json:"full,omitempty"`  // nil | bool | SemanticDelta
 	}
 
 	if err := json.Unmarshal(data, &value); err == nil {
+		self.WorkDoneProgressOptions = value.WorkDoneProgressOptions
 		self.Legend = value.Legend
 
 		if value.Range != nil {
