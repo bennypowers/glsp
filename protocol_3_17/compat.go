@@ -1,0 +1,640 @@
+package protocol
+
+// Type aliases and const re-exports for types unchanged from protocol 3.16.
+// These ensure assignment-compatibility when consumers use protocol_3_17 types
+// with handler functions inherited from the embedded protocol_3_16.Handler.
+
+import (
+	protocol316 "github.com/bennypowers/glsp/protocol_3_16"
+)
+
+// base-protocol.go
+var True bool = true
+var False bool = false
+
+type BoolOrString = protocol316.BoolOrString
+type CancelParams = protocol316.CancelParams
+type CancelRequestFunc = protocol316.CancelRequestFunc
+type Decimal = protocol316.Decimal
+type Integer = protocol316.Integer
+type IntegerOrString = protocol316.IntegerOrString
+type Method = protocol316.Method
+type ProgressFunc = protocol316.ProgressFunc
+type ProgressParams = protocol316.ProgressParams
+type ProgressToken = protocol316.ProgressToken
+type UInteger = protocol316.UInteger
+
+const (
+	MethodCancelRequest = protocol316.MethodCancelRequest
+	MethodProgress = protocol316.MethodProgress
+)
+
+// base-structures.go
+type AnnotatedTextEdit = protocol316.AnnotatedTextEdit
+type ChangeAnnotation = protocol316.ChangeAnnotation
+type ChangeAnnotationIdentifier = protocol316.ChangeAnnotationIdentifier
+type CodeDescription = protocol316.CodeDescription
+type Command = protocol316.Command
+type CreateFile = protocol316.CreateFile
+type CreateFileOptions = protocol316.CreateFileOptions
+type DeleteFile = protocol316.DeleteFile
+type DeleteFileOptions = protocol316.DeleteFileOptions
+type Diagnostic = protocol316.Diagnostic
+type DiagnosticRelatedInformation = protocol316.DiagnosticRelatedInformation
+type DiagnosticSeverity = protocol316.DiagnosticSeverity
+type DiagnosticTag = protocol316.DiagnosticTag
+type DocumentFilter = protocol316.DocumentFilter
+type DocumentSelector = protocol316.DocumentSelector
+type DocumentUri = protocol316.DocumentUri
+type FailureHandlingKind = protocol316.FailureHandlingKind
+type Location = protocol316.Location
+type LocationLink = protocol316.LocationLink
+type MarkupContent = protocol316.MarkupContent
+type MarkupKind = protocol316.MarkupKind
+type OptionalVersionedTextDocumentIdentifier = protocol316.OptionalVersionedTextDocumentIdentifier
+type PartialResultParams = protocol316.PartialResultParams
+type Position = protocol316.Position
+type Range = protocol316.Range
+type RegularExpressionsClientCapabilities = protocol316.RegularExpressionsClientCapabilities
+type RenameFile = protocol316.RenameFile
+type RenameFileOptions = protocol316.RenameFileOptions
+type ResourceOperationKind = protocol316.ResourceOperationKind
+type StaticRegistrationOptions = protocol316.StaticRegistrationOptions
+type TextDocumentEdit = protocol316.TextDocumentEdit
+type TextDocumentIdentifier = protocol316.TextDocumentIdentifier
+type TextDocumentItem = protocol316.TextDocumentItem
+type TextDocumentPositionParams = protocol316.TextDocumentPositionParams
+type TextDocumentRegistrationOptions = protocol316.TextDocumentRegistrationOptions
+type TextEdit = protocol316.TextEdit
+type TraceValue = protocol316.TraceValue
+type URI = protocol316.URI
+type VersionedTextDocumentIdentifier = protocol316.VersionedTextDocumentIdentifier
+type WorkDoneProgressBegin = protocol316.WorkDoneProgressBegin
+type WorkDoneProgressEnd = protocol316.WorkDoneProgressEnd
+type WorkDoneProgressOptions = protocol316.WorkDoneProgressOptions
+type WorkDoneProgressParams = protocol316.WorkDoneProgressParams
+type WorkDoneProgressReport = protocol316.WorkDoneProgressReport
+type WorkspaceEdit = protocol316.WorkspaceEdit
+type WorkspaceEditClientCapabilities = protocol316.WorkspaceEditClientCapabilities
+
+const (
+	DiagnosticSeverityError = protocol316.DiagnosticSeverityError
+	DiagnosticSeverityHint = protocol316.DiagnosticSeverityHint
+	DiagnosticSeverityInformation = protocol316.DiagnosticSeverityInformation
+	DiagnosticSeverityWarning = protocol316.DiagnosticSeverityWarning
+	DiagnosticTagDeprecated = protocol316.DiagnosticTagDeprecated
+	DiagnosticTagUnnecessary = protocol316.DiagnosticTagUnnecessary
+	FailureHandlingKindAbort = protocol316.FailureHandlingKindAbort
+	FailureHandlingKindTextOnlyTransactional = protocol316.FailureHandlingKindTextOnlyTransactional
+	FailureHandlingKindTransactional = protocol316.FailureHandlingKindTransactional
+	FailureHandlingKindUndo = protocol316.FailureHandlingKindUndo
+	MarkupKindMarkdown = protocol316.MarkupKindMarkdown
+	MarkupKindPlainText = protocol316.MarkupKindPlainText
+	ResourceOperationKindCreate = protocol316.ResourceOperationKindCreate
+	ResourceOperationKindDelete = protocol316.ResourceOperationKindDelete
+	ResourceOperationKindRename = protocol316.ResourceOperationKindRename
+	TraceValueMessage = protocol316.TraceValueMessage
+	TraceValueOff = protocol316.TraceValueOff
+	TraceValueVerbose = protocol316.TraceValueVerbose
+)
+
+// client.go
+type Registration = protocol316.Registration
+type RegistrationParams = protocol316.RegistrationParams
+type Unregistration = protocol316.Unregistration
+type UnregistrationParams = protocol316.UnregistrationParams
+
+const (
+	ServerClientRegisterCapability = protocol316.ServerClientRegisterCapability
+	ServerClientUnregisterCapability = protocol316.ServerClientUnregisterCapability
+)
+
+// custom.go
+type CustomRequestFunc = protocol316.CustomRequestFunc
+type CustomRequestHandler = protocol316.CustomRequestHandler
+type CustomRequestHandlers = protocol316.CustomRequestHandlers
+
+// diagnostics.go
+type PublishDiagnosticsClientCapabilities = protocol316.PublishDiagnosticsClientCapabilities
+
+const (
+	ServerTextDocumentPublishDiagnostics = protocol316.ServerTextDocumentPublishDiagnostics
+)
+
+// general-messages.go
+type InitializeResultServerInfo = protocol316.InitializeResultServerInfo
+type InitializedParams = protocol316.InitializedParams
+type LogTraceParams = protocol316.LogTraceParams
+type ServerCapabilitiesWorkspace = protocol316.ServerCapabilitiesWorkspace
+type ServerCapabilitiesWorkspaceFileOperations = protocol316.ServerCapabilitiesWorkspaceFileOperations
+type SetTraceParams = protocol316.SetTraceParams
+
+const (
+	MethodInitialize  = protocol316.MethodInitialize
+	MethodInitialized = protocol316.MethodInitialized
+	MethodShutdown    = protocol316.MethodShutdown
+	MethodExit        = protocol316.MethodExit
+	MethodLogTrace    = protocol316.MethodLogTrace
+	MethodSetTrace    = protocol316.MethodSetTrace
+)
+
+// language-features.go
+type CallHierarchyClientCapabilities = protocol316.CallHierarchyClientCapabilities
+type CallHierarchyIncomingCall = protocol316.CallHierarchyIncomingCall
+type CallHierarchyIncomingCallsFunc = protocol316.CallHierarchyIncomingCallsFunc
+type CallHierarchyIncomingCallsParams = protocol316.CallHierarchyIncomingCallsParams
+type CallHierarchyItem = protocol316.CallHierarchyItem
+type CallHierarchyOptions = protocol316.CallHierarchyOptions
+type CallHierarchyOutgoingCall = protocol316.CallHierarchyOutgoingCall
+type CallHierarchyOutgoingCallsFunc = protocol316.CallHierarchyOutgoingCallsFunc
+type CallHierarchyOutgoingCallsParams = protocol316.CallHierarchyOutgoingCallsParams
+type CallHierarchyPrepareParams = protocol316.CallHierarchyPrepareParams
+type CallHierarchyRegistrationOptions = protocol316.CallHierarchyRegistrationOptions
+type CodeAction = protocol316.CodeAction
+type CodeActionClientCapabilities = protocol316.CodeActionClientCapabilities
+type CodeActionContext = protocol316.CodeActionContext
+type CodeActionKind = protocol316.CodeActionKind
+type CodeActionOptions = protocol316.CodeActionOptions
+type CodeActionParams = protocol316.CodeActionParams
+type CodeActionRegistrationOptions = protocol316.CodeActionRegistrationOptions
+type CodeActionResolveFunc = protocol316.CodeActionResolveFunc
+type CodeLens = protocol316.CodeLens
+type CodeLensClientCapabilities = protocol316.CodeLensClientCapabilities
+type CodeLensOptions = protocol316.CodeLensOptions
+type CodeLensParams = protocol316.CodeLensParams
+type CodeLensRegistrationOptions = protocol316.CodeLensRegistrationOptions
+type CodeLensResolveFunc = protocol316.CodeLensResolveFunc
+type CodeLensWorkspaceClientCapabilities = protocol316.CodeLensWorkspaceClientCapabilities
+type Color = protocol316.Color
+type ColorInformation = protocol316.ColorInformation
+type ColorPresentation = protocol316.ColorPresentation
+type ColorPresentationParams = protocol316.ColorPresentationParams
+type CompletionClientCapabilities = protocol316.CompletionClientCapabilities
+type CompletionContext = protocol316.CompletionContext
+type CompletionItem = protocol316.CompletionItem
+type CompletionItemKind = protocol316.CompletionItemKind
+type CompletionItemResolveFunc = protocol316.CompletionItemResolveFunc
+type CompletionItemTag = protocol316.CompletionItemTag
+type CompletionList = protocol316.CompletionList
+type CompletionOptions = protocol316.CompletionOptions
+type CompletionParams = protocol316.CompletionParams
+type CompletionRegistrationOptions = protocol316.CompletionRegistrationOptions
+type CompletionTriggerKind = protocol316.CompletionTriggerKind
+type DeclarationClientCapabilities = protocol316.DeclarationClientCapabilities
+type DeclarationOptions = protocol316.DeclarationOptions
+type DeclarationParams = protocol316.DeclarationParams
+type DeclarationRegistrationOptions = protocol316.DeclarationRegistrationOptions
+type DefaultBehavior = protocol316.DefaultBehavior
+type DefinitionClientCapabilities = protocol316.DefinitionClientCapabilities
+type DefinitionOptions = protocol316.DefinitionOptions
+type DefinitionParams = protocol316.DefinitionParams
+type DefinitionRegistrationOptions = protocol316.DefinitionRegistrationOptions
+type DocumentColorClientCapabilities = protocol316.DocumentColorClientCapabilities
+type DocumentColorOptions = protocol316.DocumentColorOptions
+type DocumentColorParams = protocol316.DocumentColorParams
+type DocumentColorRegistrationOptions = protocol316.DocumentColorRegistrationOptions
+type DocumentFormattingClientCapabilities = protocol316.DocumentFormattingClientCapabilities
+type DocumentFormattingOptions = protocol316.DocumentFormattingOptions
+type DocumentFormattingParams = protocol316.DocumentFormattingParams
+type DocumentFormattingRegistrationOptions = protocol316.DocumentFormattingRegistrationOptions
+type DocumentHighlight = protocol316.DocumentHighlight
+type DocumentHighlightClientCapabilities = protocol316.DocumentHighlightClientCapabilities
+type DocumentHighlightKind = protocol316.DocumentHighlightKind
+type DocumentHighlightOptions = protocol316.DocumentHighlightOptions
+type DocumentHighlightParams = protocol316.DocumentHighlightParams
+type DocumentHighlightRegistrationOptions = protocol316.DocumentHighlightRegistrationOptions
+type DocumentLink = protocol316.DocumentLink
+type DocumentLinkClientCapabilities = protocol316.DocumentLinkClientCapabilities
+type DocumentLinkOptions = protocol316.DocumentLinkOptions
+type DocumentLinkParams = protocol316.DocumentLinkParams
+type DocumentLinkRegistrationOptions = protocol316.DocumentLinkRegistrationOptions
+type DocumentLinkResolveFunc = protocol316.DocumentLinkResolveFunc
+type DocumentOnTypeFormattingClientCapabilities = protocol316.DocumentOnTypeFormattingClientCapabilities
+type DocumentOnTypeFormattingOptions = protocol316.DocumentOnTypeFormattingOptions
+type DocumentOnTypeFormattingParams = protocol316.DocumentOnTypeFormattingParams
+type DocumentOnTypeFormattingRegistrationOptions = protocol316.DocumentOnTypeFormattingRegistrationOptions
+type DocumentRangeFormattingClientCapabilities = protocol316.DocumentRangeFormattingClientCapabilities
+type DocumentRangeFormattingOptions = protocol316.DocumentRangeFormattingOptions
+type DocumentRangeFormattingParams = protocol316.DocumentRangeFormattingParams
+type DocumentRangeFormattingRegistrationOptions = protocol316.DocumentRangeFormattingRegistrationOptions
+type DocumentSymbol = protocol316.DocumentSymbol
+type DocumentSymbolClientCapabilities = protocol316.DocumentSymbolClientCapabilities
+type DocumentSymbolOptions = protocol316.DocumentSymbolOptions
+type DocumentSymbolParams = protocol316.DocumentSymbolParams
+type DocumentSymbolRegistrationOptions = protocol316.DocumentSymbolRegistrationOptions
+type FoldingRange = protocol316.FoldingRange
+type FoldingRangeClientCapabilities = protocol316.FoldingRangeClientCapabilities
+type FoldingRangeKind = protocol316.FoldingRangeKind
+type FoldingRangeOptions = protocol316.FoldingRangeOptions
+type FoldingRangeParams = protocol316.FoldingRangeParams
+type FoldingRangeRegistrationOptions = protocol316.FoldingRangeRegistrationOptions
+type FormattingOptions = protocol316.FormattingOptions
+type Hover = protocol316.Hover
+type HoverClientCapabilities = protocol316.HoverClientCapabilities
+type HoverOptions = protocol316.HoverOptions
+type HoverParams = protocol316.HoverParams
+type HoverRegistrationOptions = protocol316.HoverRegistrationOptions
+type ImplementationClientCapabilities = protocol316.ImplementationClientCapabilities
+type ImplementationOptions = protocol316.ImplementationOptions
+type ImplementationParams = protocol316.ImplementationParams
+type InsertReplaceEdit = protocol316.InsertReplaceEdit
+type InsertTextFormat = protocol316.InsertTextFormat
+type InsertTextMode = protocol316.InsertTextMode
+type LinkedEditingRangeClientCapabilities = protocol316.LinkedEditingRangeClientCapabilities
+type LinkedEditingRangeOptions = protocol316.LinkedEditingRangeOptions
+type LinkedEditingRangeParams = protocol316.LinkedEditingRangeParams
+type LinkedEditingRangeRegistrationOptions = protocol316.LinkedEditingRangeRegistrationOptions
+type LinkedEditingRanges = protocol316.LinkedEditingRanges
+type MarkedString = protocol316.MarkedString
+type MarkedStringStruct = protocol316.MarkedStringStruct
+type Moniker = protocol316.Moniker
+type MonikerClientCapabilities = protocol316.MonikerClientCapabilities
+type MonikerKind = protocol316.MonikerKind
+type MonikerOptions = protocol316.MonikerOptions
+type MonikerParams = protocol316.MonikerParams
+type MonikerRegistrationOptions = protocol316.MonikerRegistrationOptions
+type ParameterInformation = protocol316.ParameterInformation
+type PrepareRenameParams = protocol316.PrepareRenameParams
+type PrepareSupportDefaultBehavior = protocol316.PrepareSupportDefaultBehavior
+type RangeWithPlaceholder = protocol316.RangeWithPlaceholder
+type ReferenceClientCapabilities = protocol316.ReferenceClientCapabilities
+type ReferenceContext = protocol316.ReferenceContext
+type ReferenceOptions = protocol316.ReferenceOptions
+type ReferenceParams = protocol316.ReferenceParams
+type ReferenceRegistrationOptions = protocol316.ReferenceRegistrationOptions
+type RenameClientCapabilities = protocol316.RenameClientCapabilities
+type RenameOptions = protocol316.RenameOptions
+type RenameParams = protocol316.RenameParams
+type RenameRegistrationOptions = protocol316.RenameRegistrationOptions
+type SelectionRange = protocol316.SelectionRange
+type SelectionRangeClientCapabilities = protocol316.SelectionRangeClientCapabilities
+type SelectionRangeOptions = protocol316.SelectionRangeOptions
+type SelectionRangeParams = protocol316.SelectionRangeParams
+type SelectionRangeRegistrationOptions = protocol316.SelectionRangeRegistrationOptions
+type SemanticDelta = protocol316.SemanticDelta
+type SemanticTokenModifier = protocol316.SemanticTokenModifier
+type SemanticTokenType = protocol316.SemanticTokenType
+type SemanticTokens = protocol316.SemanticTokens
+type SemanticTokensDelta = protocol316.SemanticTokensDelta
+type SemanticTokensDeltaParams = protocol316.SemanticTokensDeltaParams
+type SemanticTokensDeltaPartialResult = protocol316.SemanticTokensDeltaPartialResult
+type SemanticTokensEdit = protocol316.SemanticTokensEdit
+type SemanticTokensLegend = protocol316.SemanticTokensLegend
+type SemanticTokensOptions = protocol316.SemanticTokensOptions
+type SemanticTokensParams = protocol316.SemanticTokensParams
+type SemanticTokensPartialResult = protocol316.SemanticTokensPartialResult
+type SemanticTokensRangeParams = protocol316.SemanticTokensRangeParams
+type SemanticTokensRegistrationOptions = protocol316.SemanticTokensRegistrationOptions
+type SignatureHelp = protocol316.SignatureHelp
+type SignatureHelpClientCapabilities = protocol316.SignatureHelpClientCapabilities
+type SignatureHelpContext = protocol316.SignatureHelpContext
+type SignatureHelpOptions = protocol316.SignatureHelpOptions
+type SignatureHelpParams = protocol316.SignatureHelpParams
+type SignatureHelpRegistrationOptions = protocol316.SignatureHelpRegistrationOptions
+type SignatureHelpTriggerKind = protocol316.SignatureHelpTriggerKind
+type SignatureInformation = protocol316.SignatureInformation
+type SymbolInformation = protocol316.SymbolInformation
+type SymbolKind = protocol316.SymbolKind
+type SymbolTag = protocol316.SymbolTag
+type TextDocumentCodeActionFunc = protocol316.TextDocumentCodeActionFunc
+type TextDocumentCodeLensFunc = protocol316.TextDocumentCodeLensFunc
+type TextDocumentColorFunc = protocol316.TextDocumentColorFunc
+type TextDocumentColorPresentationFunc = protocol316.TextDocumentColorPresentationFunc
+type TextDocumentCompletionFunc = protocol316.TextDocumentCompletionFunc
+type TextDocumentDeclarationFunc = protocol316.TextDocumentDeclarationFunc
+type TextDocumentDefinitionFunc = protocol316.TextDocumentDefinitionFunc
+type TextDocumentDocumentHighlightFunc = protocol316.TextDocumentDocumentHighlightFunc
+type TextDocumentDocumentLinkFunc = protocol316.TextDocumentDocumentLinkFunc
+type TextDocumentDocumentSymbolFunc = protocol316.TextDocumentDocumentSymbolFunc
+type TextDocumentFoldingRangeFunc = protocol316.TextDocumentFoldingRangeFunc
+type TextDocumentFormattingFunc = protocol316.TextDocumentFormattingFunc
+type TextDocumentHoverFunc = protocol316.TextDocumentHoverFunc
+type TextDocumentImplementationFunc = protocol316.TextDocumentImplementationFunc
+type TextDocumentLinkedEditingRangeFunc = protocol316.TextDocumentLinkedEditingRangeFunc
+type TextDocumentMonikerFunc = protocol316.TextDocumentMonikerFunc
+type TextDocumentOnTypeFormattingFunc = protocol316.TextDocumentOnTypeFormattingFunc
+type TextDocumentPrepareCallHierarchyFunc = protocol316.TextDocumentPrepareCallHierarchyFunc
+type TextDocumentPrepareRenameFunc = protocol316.TextDocumentPrepareRenameFunc
+type TextDocumentRangeFormattingFunc = protocol316.TextDocumentRangeFormattingFunc
+type TextDocumentReferencesFunc = protocol316.TextDocumentReferencesFunc
+type TextDocumentRenameFunc = protocol316.TextDocumentRenameFunc
+type TextDocumentSelectionRangeFunc = protocol316.TextDocumentSelectionRangeFunc
+type TextDocumentSemanticTokensFullDeltaFunc = protocol316.TextDocumentSemanticTokensFullDeltaFunc
+type TextDocumentSemanticTokensFullFunc = protocol316.TextDocumentSemanticTokensFullFunc
+type TextDocumentSemanticTokensRangeFunc = protocol316.TextDocumentSemanticTokensRangeFunc
+type TextDocumentSignatureHelpFunc = protocol316.TextDocumentSignatureHelpFunc
+type TextDocumentTypeDefinitionFunc = protocol316.TextDocumentTypeDefinitionFunc
+type TokenFormat = protocol316.TokenFormat
+type TypeDefinitionClientCapabilities = protocol316.TypeDefinitionClientCapabilities
+type TypeDefinitionOptions = protocol316.TypeDefinitionOptions
+type TypeDefinitionParams = protocol316.TypeDefinitionParams
+type TypeDefinitionRegistrationOptions = protocol316.TypeDefinitionRegistrationOptions
+type UniquenessLevel = protocol316.UniquenessLevel
+
+const (
+	CodeActionKindEmpty = protocol316.CodeActionKindEmpty
+	CodeActionKindQuickFix = protocol316.CodeActionKindQuickFix
+	CodeActionKindRefactor = protocol316.CodeActionKindRefactor
+	CodeActionKindRefactorExtract = protocol316.CodeActionKindRefactorExtract
+	CodeActionKindRefactorInline = protocol316.CodeActionKindRefactorInline
+	CodeActionKindRefactorRewrite = protocol316.CodeActionKindRefactorRewrite
+	CodeActionKindSource = protocol316.CodeActionKindSource
+	CodeActionKindSourceOrganizeImports = protocol316.CodeActionKindSourceOrganizeImports
+	CompletionItemKindClass = protocol316.CompletionItemKindClass
+	CompletionItemKindColor = protocol316.CompletionItemKindColor
+	CompletionItemKindConstant = protocol316.CompletionItemKindConstant
+	CompletionItemKindConstructor = protocol316.CompletionItemKindConstructor
+	CompletionItemKindEnum = protocol316.CompletionItemKindEnum
+	CompletionItemKindEnumMember = protocol316.CompletionItemKindEnumMember
+	CompletionItemKindEvent = protocol316.CompletionItemKindEvent
+	CompletionItemKindField = protocol316.CompletionItemKindField
+	CompletionItemKindFile = protocol316.CompletionItemKindFile
+	CompletionItemKindFolder = protocol316.CompletionItemKindFolder
+	CompletionItemKindFunction = protocol316.CompletionItemKindFunction
+	CompletionItemKindInterface = protocol316.CompletionItemKindInterface
+	CompletionItemKindKeyword = protocol316.CompletionItemKindKeyword
+	CompletionItemKindMethod = protocol316.CompletionItemKindMethod
+	CompletionItemKindModule = protocol316.CompletionItemKindModule
+	CompletionItemKindOperator = protocol316.CompletionItemKindOperator
+	CompletionItemKindProperty = protocol316.CompletionItemKindProperty
+	CompletionItemKindReference = protocol316.CompletionItemKindReference
+	CompletionItemKindSnippet = protocol316.CompletionItemKindSnippet
+	CompletionItemKindStruct = protocol316.CompletionItemKindStruct
+	CompletionItemKindText = protocol316.CompletionItemKindText
+	CompletionItemKindTypeParameter = protocol316.CompletionItemKindTypeParameter
+	CompletionItemKindUnit = protocol316.CompletionItemKindUnit
+	CompletionItemKindValue = protocol316.CompletionItemKindValue
+	CompletionItemKindVariable = protocol316.CompletionItemKindVariable
+	CompletionItemTagDeprecated = protocol316.CompletionItemTagDeprecated
+	CompletionTriggerKindInvoked = protocol316.CompletionTriggerKindInvoked
+	CompletionTriggerKindTriggerCharacter = protocol316.CompletionTriggerKindTriggerCharacter
+	CompletionTriggerKindTriggerForIncompleteCompletions = protocol316.CompletionTriggerKindTriggerForIncompleteCompletions
+	DocumentHighlightKindRead = protocol316.DocumentHighlightKindRead
+	DocumentHighlightKindText = protocol316.DocumentHighlightKindText
+	DocumentHighlightKindWrite = protocol316.DocumentHighlightKindWrite
+	FoldingRangeKindComment = protocol316.FoldingRangeKindComment
+	FoldingRangeKindImports = protocol316.FoldingRangeKindImports
+	FoldingRangeKindRegion = protocol316.FoldingRangeKindRegion
+	FormattingOptionInsertFinalNewline = protocol316.FormattingOptionInsertFinalNewline
+	FormattingOptionInsertSpaces = protocol316.FormattingOptionInsertSpaces
+	FormattingOptionTabSize = protocol316.FormattingOptionTabSize
+	FormattingOptionTrimFinalNewlines = protocol316.FormattingOptionTrimFinalNewlines
+	FormattingOptionTrimTrailingWhitespace = protocol316.FormattingOptionTrimTrailingWhitespace
+	InsertTextFormatPlainText = protocol316.InsertTextFormatPlainText
+	InsertTextFormatSnippet = protocol316.InsertTextFormatSnippet
+	InsertTextModeAdjustIndentation = protocol316.InsertTextModeAdjustIndentation
+	InsertTextModeAsIs = protocol316.InsertTextModeAsIs
+	MethodCallHierarchyIncomingCalls = protocol316.MethodCallHierarchyIncomingCalls
+	MethodCallHierarchyOutgoingCalls = protocol316.MethodCallHierarchyOutgoingCalls
+	MethodCodeActionResolve = protocol316.MethodCodeActionResolve
+	MethodCodeLensResolve = protocol316.MethodCodeLensResolve
+	MethodCompletionItemResolve = protocol316.MethodCompletionItemResolve
+	MethodDocumentLinkResolve = protocol316.MethodDocumentLinkResolve
+	MethodTextDocumentCodeAction = protocol316.MethodTextDocumentCodeAction
+	MethodTextDocumentCodeLens = protocol316.MethodTextDocumentCodeLens
+	MethodTextDocumentColor = protocol316.MethodTextDocumentColor
+	MethodTextDocumentColorPresentation = protocol316.MethodTextDocumentColorPresentation
+	MethodTextDocumentCompletion = protocol316.MethodTextDocumentCompletion
+	MethodTextDocumentDeclaration = protocol316.MethodTextDocumentDeclaration
+	MethodTextDocumentDefinition = protocol316.MethodTextDocumentDefinition
+	MethodTextDocumentDocumentHighlight = protocol316.MethodTextDocumentDocumentHighlight
+	MethodTextDocumentDocumentLink = protocol316.MethodTextDocumentDocumentLink
+	MethodTextDocumentDocumentSymbol = protocol316.MethodTextDocumentDocumentSymbol
+	MethodTextDocumentFoldingRange = protocol316.MethodTextDocumentFoldingRange
+	MethodTextDocumentFormatting = protocol316.MethodTextDocumentFormatting
+	MethodTextDocumentHover = protocol316.MethodTextDocumentHover
+	MethodTextDocumentImplementation = protocol316.MethodTextDocumentImplementation
+	MethodTextDocumentLinkedEditingRange = protocol316.MethodTextDocumentLinkedEditingRange
+	MethodTextDocumentMoniker = protocol316.MethodTextDocumentMoniker
+	MethodTextDocumentOnTypeFormatting = protocol316.MethodTextDocumentOnTypeFormatting
+	MethodTextDocumentPrepareCallHierarchy = protocol316.MethodTextDocumentPrepareCallHierarchy
+	MethodTextDocumentPrepareRename = protocol316.MethodTextDocumentPrepareRename
+	MethodTextDocumentRangeFormatting = protocol316.MethodTextDocumentRangeFormatting
+	MethodTextDocumentReferences = protocol316.MethodTextDocumentReferences
+	MethodTextDocumentRename = protocol316.MethodTextDocumentRename
+	MethodTextDocumentSelectionRange = protocol316.MethodTextDocumentSelectionRange
+	MethodTextDocumentSemanticTokensFull = protocol316.MethodTextDocumentSemanticTokensFull
+	MethodTextDocumentSemanticTokensFullDelta = protocol316.MethodTextDocumentSemanticTokensFullDelta
+	MethodTextDocumentSemanticTokensRange = protocol316.MethodTextDocumentSemanticTokensRange
+	MethodTextDocumentSignatureHelp = protocol316.MethodTextDocumentSignatureHelp
+	MethodTextDocumentTypeDefinition = protocol316.MethodTextDocumentTypeDefinition
+	MonikerKindExport = protocol316.MonikerKindExport
+	MonikerKindImport = protocol316.MonikerKindImport
+	MonikerKindLocal = protocol316.MonikerKindLocal
+	PrepareSupportDefaultBehaviorIdentifier = protocol316.PrepareSupportDefaultBehaviorIdentifier
+	SemanticTokenModifierAbstract = protocol316.SemanticTokenModifierAbstract
+	SemanticTokenModifierAsync = protocol316.SemanticTokenModifierAsync
+	SemanticTokenModifierDeclaration = protocol316.SemanticTokenModifierDeclaration
+	SemanticTokenModifierDefaultLibrary = protocol316.SemanticTokenModifierDefaultLibrary
+	SemanticTokenModifierDefinition = protocol316.SemanticTokenModifierDefinition
+	SemanticTokenModifierDeprecated = protocol316.SemanticTokenModifierDeprecated
+	SemanticTokenModifierDocumentation = protocol316.SemanticTokenModifierDocumentation
+	SemanticTokenModifierModification = protocol316.SemanticTokenModifierModification
+	SemanticTokenModifierReadonly = protocol316.SemanticTokenModifierReadonly
+	SemanticTokenModifierStatic = protocol316.SemanticTokenModifierStatic
+	SemanticTokenTypeClass = protocol316.SemanticTokenTypeClass
+	SemanticTokenTypeComment = protocol316.SemanticTokenTypeComment
+	SemanticTokenTypeEnum = protocol316.SemanticTokenTypeEnum
+	SemanticTokenTypeEnumMember = protocol316.SemanticTokenTypeEnumMember
+	SemanticTokenTypeEvent = protocol316.SemanticTokenTypeEvent
+	SemanticTokenTypeFunction = protocol316.SemanticTokenTypeFunction
+	SemanticTokenTypeInterface = protocol316.SemanticTokenTypeInterface
+	SemanticTokenTypeKeyword = protocol316.SemanticTokenTypeKeyword
+	SemanticTokenTypeMacro = protocol316.SemanticTokenTypeMacro
+	SemanticTokenTypeMethod = protocol316.SemanticTokenTypeMethod
+	SemanticTokenTypeModifier = protocol316.SemanticTokenTypeModifier
+	SemanticTokenTypeNamespace = protocol316.SemanticTokenTypeNamespace
+	SemanticTokenTypeNumber = protocol316.SemanticTokenTypeNumber
+	SemanticTokenTypeOperator = protocol316.SemanticTokenTypeOperator
+	SemanticTokenTypeParameter = protocol316.SemanticTokenTypeParameter
+	SemanticTokenTypeProperty = protocol316.SemanticTokenTypeProperty
+	SemanticTokenTypeRegexp = protocol316.SemanticTokenTypeRegexp
+	SemanticTokenTypeString = protocol316.SemanticTokenTypeString
+	SemanticTokenTypeStruct = protocol316.SemanticTokenTypeStruct
+	SemanticTokenTypeType = protocol316.SemanticTokenTypeType
+	SemanticTokenTypeTypeParameter = protocol316.SemanticTokenTypeTypeParameter
+	SemanticTokenTypeVariable = protocol316.SemanticTokenTypeVariable
+	ServerWorkspaceCodeLensRefresh = protocol316.ServerWorkspaceCodeLensRefresh
+	SignatureHelpTriggerKindContentChange = protocol316.SignatureHelpTriggerKindContentChange
+	SignatureHelpTriggerKindInvoked = protocol316.SignatureHelpTriggerKindInvoked
+	SignatureHelpTriggerKindTriggerCharacter = protocol316.SignatureHelpTriggerKindTriggerCharacter
+	SymbolKindArray = protocol316.SymbolKindArray
+	SymbolKindBoolean = protocol316.SymbolKindBoolean
+	SymbolKindClass = protocol316.SymbolKindClass
+	SymbolKindConstant = protocol316.SymbolKindConstant
+	SymbolKindConstructor = protocol316.SymbolKindConstructor
+	SymbolKindEnum = protocol316.SymbolKindEnum
+	SymbolKindEnumMember = protocol316.SymbolKindEnumMember
+	SymbolKindEvent = protocol316.SymbolKindEvent
+	SymbolKindField = protocol316.SymbolKindField
+	SymbolKindFile = protocol316.SymbolKindFile
+	SymbolKindFunction = protocol316.SymbolKindFunction
+	SymbolKindInterface = protocol316.SymbolKindInterface
+	SymbolKindKey = protocol316.SymbolKindKey
+	SymbolKindMethod = protocol316.SymbolKindMethod
+	SymbolKindModule = protocol316.SymbolKindModule
+	SymbolKindNamespace = protocol316.SymbolKindNamespace
+	SymbolKindNull = protocol316.SymbolKindNull
+	SymbolKindNumber = protocol316.SymbolKindNumber
+	SymbolKindObject = protocol316.SymbolKindObject
+	SymbolKindOperator = protocol316.SymbolKindOperator
+	SymbolKindPackage = protocol316.SymbolKindPackage
+	SymbolKindProperty = protocol316.SymbolKindProperty
+	SymbolKindString = protocol316.SymbolKindString
+	SymbolKindStruct = protocol316.SymbolKindStruct
+	SymbolKindTypeParameter = protocol316.SymbolKindTypeParameter
+	SymbolKindVariable = protocol316.SymbolKindVariable
+	SymbolTagDeprecated = protocol316.SymbolTagDeprecated
+	TokenFormatRelative = protocol316.TokenFormatRelative
+	UniquenessLevelDocument = protocol316.UniquenessLevelDocument
+	UniquenessLevelGlobal = protocol316.UniquenessLevelGlobal
+	UniquenessLevelGroup = protocol316.UniquenessLevelGroup
+	UniquenessLevelProject = protocol316.UniquenessLevelProject
+	UniquenessLevelScheme = protocol316.UniquenessLevelScheme
+)
+
+// telemetry.go
+
+const (
+	ServerTelemetryEvent = protocol316.ServerTelemetryEvent
+)
+
+// text-document-synchronization.go
+type DidChangeTextDocumentParams = protocol316.DidChangeTextDocumentParams
+type DidCloseTextDocumentParams = protocol316.DidCloseTextDocumentParams
+type DidOpenTextDocumentParams = protocol316.DidOpenTextDocumentParams
+type DidSaveTextDocumentParams = protocol316.DidSaveTextDocumentParams
+type SaveOptions = protocol316.SaveOptions
+type TextDocumentChangeRegistrationOptions = protocol316.TextDocumentChangeRegistrationOptions
+type TextDocumentContentChangeEvent = protocol316.TextDocumentContentChangeEvent
+type TextDocumentContentChangeEventWhole = protocol316.TextDocumentContentChangeEventWhole
+type TextDocumentDidChangeFunc = protocol316.TextDocumentDidChangeFunc
+type TextDocumentDidCloseFunc = protocol316.TextDocumentDidCloseFunc
+type TextDocumentDidOpenFunc = protocol316.TextDocumentDidOpenFunc
+type TextDocumentDidSaveFunc = protocol316.TextDocumentDidSaveFunc
+type TextDocumentSaveReason = protocol316.TextDocumentSaveReason
+type TextDocumentSaveRegistrationOptions = protocol316.TextDocumentSaveRegistrationOptions
+type TextDocumentSyncClientCapabilities = protocol316.TextDocumentSyncClientCapabilities
+type TextDocumentSyncKind = protocol316.TextDocumentSyncKind
+type TextDocumentSyncOptions = protocol316.TextDocumentSyncOptions
+type TextDocumentWillSaveFunc = protocol316.TextDocumentWillSaveFunc
+type TextDocumentWillSaveWaitUntilFunc = protocol316.TextDocumentWillSaveWaitUntilFunc
+type WillSaveTextDocumentParams = protocol316.WillSaveTextDocumentParams
+
+const (
+	MethodTextDocumentDidChange = protocol316.MethodTextDocumentDidChange
+	MethodTextDocumentDidClose = protocol316.MethodTextDocumentDidClose
+	MethodTextDocumentDidOpen = protocol316.MethodTextDocumentDidOpen
+	MethodTextDocumentDidSave = protocol316.MethodTextDocumentDidSave
+	MethodTextDocumentWillSave = protocol316.MethodTextDocumentWillSave
+	MethodTextDocumentWillSaveWaitUntil = protocol316.MethodTextDocumentWillSaveWaitUntil
+	TextDocumentSaveReasonAfterDelay = protocol316.TextDocumentSaveReasonAfterDelay
+	TextDocumentSaveReasonFocusOut = protocol316.TextDocumentSaveReasonFocusOut
+	TextDocumentSaveReasonManual = protocol316.TextDocumentSaveReasonManual
+	TextDocumentSyncKindFull = protocol316.TextDocumentSyncKindFull
+	TextDocumentSyncKindIncremental = protocol316.TextDocumentSyncKindIncremental
+	TextDocumentSyncKindNone = protocol316.TextDocumentSyncKindNone
+)
+
+// window.go
+type LogMessageParams = protocol316.LogMessageParams
+type MessageActionItem = protocol316.MessageActionItem
+type MessageType = protocol316.MessageType
+type ShowDocumentClientCapabilities = protocol316.ShowDocumentClientCapabilities
+type ShowDocumentParams = protocol316.ShowDocumentParams
+type ShowDocumentResult = protocol316.ShowDocumentResult
+type ShowMessageParams = protocol316.ShowMessageParams
+type ShowMessageRequestClientCapabilities = protocol316.ShowMessageRequestClientCapabilities
+type ShowMessageRequestParams = protocol316.ShowMessageRequestParams
+type WindowWorkDoneProgressCancelFunc = protocol316.WindowWorkDoneProgressCancelFunc
+type WorkDoneProgressCancelParams = protocol316.WorkDoneProgressCancelParams
+type WorkDoneProgressCreateParams = protocol316.WorkDoneProgressCreateParams
+
+const (
+	MessageTypeError = protocol316.MessageTypeError
+	MessageTypeInfo = protocol316.MessageTypeInfo
+	MessageTypeLog = protocol316.MessageTypeLog
+	MessageTypeWarning = protocol316.MessageTypeWarning
+	MethodWindowWorkDoneProgressCancel = protocol316.MethodWindowWorkDoneProgressCancel
+	ServerWindowLogMessage = protocol316.ServerWindowLogMessage
+	ServerWindowShowDocument = protocol316.ServerWindowShowDocument
+	ServerWindowShowMessage = protocol316.ServerWindowShowMessage
+	ServerWindowShowMessageRequest = protocol316.ServerWindowShowMessageRequest
+	ServerWindowWorkDoneProgressCreate = protocol316.ServerWindowWorkDoneProgressCreate
+)
+
+// workspace.go
+type ApplyWorkspaceEditParams = protocol316.ApplyWorkspaceEditParams
+type ApplyWorkspaceEditResponse = protocol316.ApplyWorkspaceEditResponse
+type ConfigurationItem = protocol316.ConfigurationItem
+type ConfigurationParams = protocol316.ConfigurationParams
+type CreateFilesParams = protocol316.CreateFilesParams
+type DeleteFilesParams = protocol316.DeleteFilesParams
+type DidChangeConfigurationClientCapabilities = protocol316.DidChangeConfigurationClientCapabilities
+type DidChangeConfigurationParams = protocol316.DidChangeConfigurationParams
+type DidChangeWatchedFilesClientCapabilities = protocol316.DidChangeWatchedFilesClientCapabilities
+type DidChangeWatchedFilesParams = protocol316.DidChangeWatchedFilesParams
+type DidChangeWatchedFilesRegistrationOptions = protocol316.DidChangeWatchedFilesRegistrationOptions
+type DidChangeWorkspaceFoldersParams = protocol316.DidChangeWorkspaceFoldersParams
+type ExecuteCommandClientCapabilities = protocol316.ExecuteCommandClientCapabilities
+type ExecuteCommandOptions = protocol316.ExecuteCommandOptions
+type ExecuteCommandParams = protocol316.ExecuteCommandParams
+type ExecuteCommandRegistrationOptions = protocol316.ExecuteCommandRegistrationOptions
+type FileCreate = protocol316.FileCreate
+type FileDelete = protocol316.FileDelete
+type FileEvent = protocol316.FileEvent
+type FileOperationFilter = protocol316.FileOperationFilter
+type FileOperationPattern = protocol316.FileOperationPattern
+type FileOperationPatternKind = protocol316.FileOperationPatternKind
+type FileOperationPatternOptions = protocol316.FileOperationPatternOptions
+type FileOperationRegistrationOptions = protocol316.FileOperationRegistrationOptions
+type FileRename = protocol316.FileRename
+type FileSystemWatcher = protocol316.FileSystemWatcher
+type RenameFilesParams = protocol316.RenameFilesParams
+type SemanticTokensWorkspaceClientCapabilities = protocol316.SemanticTokensWorkspaceClientCapabilities
+type WorkspaceDidChangeConfigurationFunc = protocol316.WorkspaceDidChangeConfigurationFunc
+type WorkspaceDidChangeWatchedFilesFunc = protocol316.WorkspaceDidChangeWatchedFilesFunc
+type WorkspaceDidChangeWorkspaceFoldersFunc = protocol316.WorkspaceDidChangeWorkspaceFoldersFunc
+type WorkspaceDidCreateFilesFunc = protocol316.WorkspaceDidCreateFilesFunc
+type WorkspaceDidDeleteFilesFunc = protocol316.WorkspaceDidDeleteFilesFunc
+type WorkspaceDidRenameFilesFunc = protocol316.WorkspaceDidRenameFilesFunc
+type WorkspaceExecuteCommandFunc = protocol316.WorkspaceExecuteCommandFunc
+type WorkspaceFolder = protocol316.WorkspaceFolder
+type WorkspaceFoldersChangeEvent = protocol316.WorkspaceFoldersChangeEvent
+type WorkspaceFoldersServerCapabilities = protocol316.WorkspaceFoldersServerCapabilities
+type WorkspaceSemanticTokensRefreshFunc = protocol316.WorkspaceSemanticTokensRefreshFunc
+type WorkspaceSymbolClientCapabilities = protocol316.WorkspaceSymbolClientCapabilities
+type WorkspaceSymbolFunc = protocol316.WorkspaceSymbolFunc
+type WorkspaceSymbolOptions = protocol316.WorkspaceSymbolOptions
+type WorkspaceSymbolParams = protocol316.WorkspaceSymbolParams
+type WorkspaceSymbolRegistrationOptions = protocol316.WorkspaceSymbolRegistrationOptions
+type WorkspaceWillCreateFilesFunc = protocol316.WorkspaceWillCreateFilesFunc
+type WorkspaceWillDeleteFilesFunc = protocol316.WorkspaceWillDeleteFilesFunc
+type WorkspaceWillRenameFilesFunc = protocol316.WorkspaceWillRenameFilesFunc
+
+const (
+	FileChangeTypeChanged = protocol316.FileChangeTypeChanged
+	FileChangeTypeCreated = protocol316.FileChangeTypeCreated
+	FileChangeTypeDeleted = protocol316.FileChangeTypeDeleted
+	FileOperationPatternKindFile = protocol316.FileOperationPatternKindFile
+	FileOperationPatternKindFolder = protocol316.FileOperationPatternKindFolder
+	MethodWorkspaceDidChangeConfiguration = protocol316.MethodWorkspaceDidChangeConfiguration
+	MethodWorkspaceDidChangeWatchedFiles = protocol316.MethodWorkspaceDidChangeWatchedFiles
+	MethodWorkspaceDidChangeWorkspaceFolders = protocol316.MethodWorkspaceDidChangeWorkspaceFolders
+	MethodWorkspaceDidCreateFiles = protocol316.MethodWorkspaceDidCreateFiles
+	MethodWorkspaceDidDeleteFiles = protocol316.MethodWorkspaceDidDeleteFiles
+	MethodWorkspaceDidRenameFiles = protocol316.MethodWorkspaceDidRenameFiles
+	MethodWorkspaceExecuteCommand = protocol316.MethodWorkspaceExecuteCommand
+	MethodWorkspaceSemanticTokensRefresh = protocol316.MethodWorkspaceSemanticTokensRefresh
+	MethodWorkspaceSymbol = protocol316.MethodWorkspaceSymbol
+	MethodWorkspaceWillCreateFiles = protocol316.MethodWorkspaceWillCreateFiles
+	MethodWorkspaceWillDeleteFiles = protocol316.MethodWorkspaceWillDeleteFiles
+	MethodWorkspaceWillRenameFiles = protocol316.MethodWorkspaceWillRenameFiles
+	ServerWorkspaceApplyEdit = protocol316.ServerWorkspaceApplyEdit
+	ServerWorkspaceConfiguration = protocol316.ServerWorkspaceConfiguration
+	ServerWorkspaceWorkspaceFolders = protocol316.ServerWorkspaceWorkspaceFolders
+	WatchKindChange = protocol316.WatchKindChange
+	WatchKindCreate = protocol316.WatchKindCreate
+	WatchKindDelete = protocol316.WatchKindDelete
+)
+

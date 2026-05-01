@@ -354,9 +354,7 @@ type WorkspaceDiagnosticReportPartialResult struct {
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic_refresh
 
-const MethodWorkspaceDiagnosticRefresh = "workspace/diagnostics/refresh"
-
-const ServerTextDocumentPublishDiagnostics = "textDocument/publishDiagnostics"
+const MethodWorkspaceDiagnosticRefresh = "workspace/diagnostic/refresh"
 
 type PublishDiagnosticsParams struct {
 	URI         DocumentUri  `json:"uri"`

@@ -9,8 +9,6 @@ import (
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize
 
-const MethodInitialize = protocol316.Method("initialize")
-
 // Returns: InitializeResult | InitializeError
 type InitializeFunc func(context *glsp.Context, params *InitializeParams) (any, error)
 
@@ -216,6 +214,7 @@ func (self *ServerCapabilities) UnmarshalJSON(data []byte) error {
 		self.DocumentOnTypeFormattingProvider = value.DocumentOnTypeFormattingProvider
 		self.ExecuteCommandProvider = value.ExecuteCommandProvider
 		self.Workspace = value.Workspace
+		self.Experimental = value.Experimental
 
 		if value.TextDocumentSync != nil {
 			var value_ protocol316.TextDocumentSyncOptions
@@ -661,9 +660,3 @@ type InitializeResult struct {
 	ServerInfo *InitializeResultServerInfo `json:"serverInfo,omitempty"`
 }
 
-type InitializedParams = protocol316.InitializedParams
-type SetTraceParams = protocol316.SetTraceParams
-type LogTraceParams = protocol316.LogTraceParams
-type InitializeResultServerInfo = protocol316.InitializeResultServerInfo
-type ServerCapabilitiesWorkspace = protocol316.ServerCapabilitiesWorkspace
-type ServerCapabilitiesWorkspaceFileOperations = protocol316.ServerCapabilitiesWorkspaceFileOperations
