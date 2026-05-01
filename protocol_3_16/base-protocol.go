@@ -69,7 +69,7 @@ func (self BoolOrString) MarshalJSON() ([]byte, error) {
 }
 
 // ([json.Unmarshaler] interface)
-func (self BoolOrString) UnmarshalJSON(data []byte) error {
+func (self *BoolOrString) UnmarshalJSON(data []byte) error {
 	var value bool
 	if err := json.Unmarshal(data, &value); err == nil {
 		self.Value = value
@@ -89,9 +89,11 @@ func (self BoolOrString) UnmarshalJSON(data []byte) error {
 func (self BoolOrString) String() string {
 	if value, ok := self.Value.(bool); ok {
 		return strconv.FormatBool(value)
-	} else {
-		return self.Value.(string)
 	}
+	if value, ok := self.Value.(string); ok {
+		return value
+	}
+	return ""
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/specification-3-16#cancelRequest

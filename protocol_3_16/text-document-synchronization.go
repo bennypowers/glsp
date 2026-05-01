@@ -316,15 +316,19 @@ func (self *TextDocumentSyncOptions) UnmarshalJSON(data []byte) error {
 		self.WillSaveWaitUntil = value.WillSaveWaitUntil
 
 		if value.Save != nil {
-			var value_ bool
-			if err = json.Unmarshal(value.Save, &value_); err == nil {
-				self.Save = value_
+			if string(value.Save) == "null" {
+				self.Save = nil
 			} else {
-				var value_ SaveOptions
+				var value_ bool
 				if err = json.Unmarshal(value.Save, &value_); err == nil {
 					self.Save = value_
 				} else {
-					return err
+					var value_ SaveOptions
+					if err = json.Unmarshal(value.Save, &value_); err == nil {
+						self.Save = value_
+					} else {
+						return err
+					}
 				}
 			}
 		}

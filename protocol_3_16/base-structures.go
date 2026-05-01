@@ -430,16 +430,22 @@ func (self *TextDocumentEdit) UnmarshalJSON(data []byte) error {
 		self.TextDocument = value.TextDocument
 
 		for _, edit := range value.Edits {
-			var value TextEdit
-			if err = json.Unmarshal(edit, &value); err == nil {
-				self.Edits = append(self.Edits, value)
-			} else {
+			var raw map[string]json.RawMessage
+			if err = json.Unmarshal(edit, &raw); err != nil {
+				return err
+			}
+			if _, hasAnnotation := raw["annotationId"]; hasAnnotation {
 				var value AnnotatedTextEdit
-				if err = json.Unmarshal(edit, &value); err == nil {
-					self.Edits = append(self.Edits, value)
-				} else {
+				if err = json.Unmarshal(edit, &value); err != nil {
 					return err
 				}
+				self.Edits = append(self.Edits, value)
+			} else {
+				var value TextEdit
+				if err = json.Unmarshal(edit, &value); err != nil {
+					return err
+				}
+				self.Edits = append(self.Edits, value)
 			}
 		}
 
@@ -633,26 +639,36 @@ func (self *WorkspaceEdit) UnmarshalJSON(data []byte) error {
 		self.ChangeAnnotations = value.ChangeAnnotations
 
 		for _, documentChange := range value.DocumentChanges {
-			var value TextDocumentEdit
-			if err = json.Unmarshal(documentChange, &value); err == nil {
-				self.DocumentChanges = append(self.DocumentChanges, value)
-			} else {
+			var kindCheck struct {
+				Kind string `json:"kind"`
+			}
+			_ = json.Unmarshal(documentChange, &kindCheck)
+
+			switch kindCheck.Kind {
+			case "create":
 				var value CreateFile
-				if err = json.Unmarshal(documentChange, &value); err == nil {
-					self.DocumentChanges = append(self.DocumentChanges, value)
-				} else {
-					var value RenameFile
-					if err = json.Unmarshal(documentChange, &value); err == nil {
-						self.DocumentChanges = append(self.DocumentChanges, value)
-					} else {
-						var value DeleteFile
-						if err = json.Unmarshal(documentChange, &value); err == nil {
-							self.DocumentChanges = append(self.DocumentChanges, value)
-						} else {
-							return err
-						}
-					}
+				if err = json.Unmarshal(documentChange, &value); err != nil {
+					return err
 				}
+				self.DocumentChanges = append(self.DocumentChanges, value)
+			case "rename":
+				var value RenameFile
+				if err = json.Unmarshal(documentChange, &value); err != nil {
+					return err
+				}
+				self.DocumentChanges = append(self.DocumentChanges, value)
+			case "delete":
+				var value DeleteFile
+				if err = json.Unmarshal(documentChange, &value); err != nil {
+					return err
+				}
+				self.DocumentChanges = append(self.DocumentChanges, value)
+			default:
+				var value TextDocumentEdit
+				if err = json.Unmarshal(documentChange, &value); err != nil {
+					return err
+				}
+				self.DocumentChanges = append(self.DocumentChanges, value)
 			}
 		}
 
