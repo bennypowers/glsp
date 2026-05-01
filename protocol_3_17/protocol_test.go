@@ -3,7 +3,7 @@ package protocol
 import (
 	"testing"
 
-	"github.com/tliron/glsp"
+	"github.com/bennypowers/glsp"
 )
 
 func TestHandler317Features(t *testing.T) {

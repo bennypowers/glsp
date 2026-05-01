@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	protocol316 "github.com/tliron/glsp/protocol_3_16"
+	protocol316 "github.com/bennypowers/glsp/protocol_3_16"
 )
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#uri

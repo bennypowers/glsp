@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	protocol316 "github.com/tliron/glsp/protocol_3_16"
+	protocol316 "github.com/bennypowers/glsp/protocol_3_16"
 )
 
 func TestPositionEncodingJSONSerialization(t *testing.T) {

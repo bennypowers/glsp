@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/tliron/glsp"
+	"github.com/bennypowers/glsp"
 )
 
 var traceValue TraceValue = TraceValueOff

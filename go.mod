@@ -1,4 +1,4 @@
-module github.com/tliron/glsp
+module github.com/bennypowers/glsp
 
 go 1.22
 
