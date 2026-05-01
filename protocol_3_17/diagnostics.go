@@ -357,6 +357,10 @@ type WorkspaceDiagnosticReportPartialResult struct {
 
 const MethodWorkspaceDiagnosticRefresh = protocol316.Method("workspace/diagnostics/refresh")
 
-const ServerTextDocumentPublishDiagnostics = protocol316.ServerTextDocumentPublishDiagnostics
+const ServerTextDocumentPublishDiagnostics = "textDocument/publishDiagnostics"
 
-type PublishDiagnosticsParams = protocol316.PublishDiagnosticsParams
+type PublishDiagnosticsParams struct {
+	URI         DocumentUri  `json:"uri"`
+	Version     *Integer     `json:"version,omitempty"`
+	Diagnostics []Diagnostic `json:"diagnostics"`
+}
