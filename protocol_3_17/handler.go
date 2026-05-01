@@ -453,7 +453,7 @@ func (self *Handler) Handle(context *glsp.Context) (r any, validMethod bool, val
 		}
 
 	case protocol316.MethodCodeLensResolve:
-		if self.TextDocumentDidClose != nil {
+		if self.CodeLensResolve != nil {
 			validMethod = true
 			var params protocol316.CodeLens
 			if err = json.Unmarshal(context.Params, &params); err == nil {
@@ -1076,10 +1076,6 @@ func (self *Handler) CreateServerCapabilities() ServerCapabilities {
 				},
 			},
 		}
-	}
-
-	if self.TextDocumentInlayHint != nil {
-		capabilities.InlayHintProvider = true
 	}
 
 	return capabilities
