@@ -356,3 +356,7 @@ type WorkspaceDiagnosticReportPartialResult struct {
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic_refresh
 
 const MethodWorkspaceDiagnosticRefresh = protocol316.Method("workspace/diagnostics/refresh")
+
+const ServerTextDocumentPublishDiagnostics = protocol316.ServerTextDocumentPublishDiagnostics
+
+type PublishDiagnosticsParams = protocol316.PublishDiagnosticsParams

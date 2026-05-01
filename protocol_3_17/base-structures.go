@@ -752,18 +752,11 @@ type TextDocumentRegistrationOptions struct {
  * Please note that `MarkupKinds` must not start with a `$`. This kinds
  * are reserved for internal usage.
  */
-type MarkupKind string
+type MarkupKind = protocol316.MarkupKind
 
 const (
-	/**
-	 * Plain text is supported as a content format
-	 */
-	MarkupKindPlainText = MarkupKind("plaintext")
-
-	/**
-	 * Markdown is supported as a content format
-	 */
-	MarkupKindMarkdown = MarkupKind("markdown")
+	MarkupKindPlainText = protocol316.MarkupKindPlainText
+	MarkupKindMarkdown  = protocol316.MarkupKindMarkdown
 )
 
 /**
