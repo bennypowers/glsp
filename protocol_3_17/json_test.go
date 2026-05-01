@@ -3,8 +3,6 @@ package protocol
 import (
 	"encoding/json"
 	"testing"
-
-	protocol316 "github.com/bennypowers/glsp/protocol_3_16"
 )
 
 func TestPositionEncodingJSONSerialization(t *testing.T) {
@@ -234,7 +232,7 @@ func TestNotebookDocumentJSONSerialization(t *testing.T) {
 func TestDiagnosticPullModelJSONSerialization(t *testing.T) {
 	// Test DocumentDiagnosticParams
 	params := DocumentDiagnosticParams{
-		TextDocument:     protocol316.TextDocumentIdentifier{URI: "file:///test.go"},
+		TextDocument:     TextDocumentIdentifier{URI: "file:///test.go"},
 		Identifier:       stringPtr("go-lsp"),
 		PreviousResultId: stringPtr("result-123"),
 	}
@@ -258,11 +256,11 @@ func TestDiagnosticPullModelJSONSerialization(t *testing.T) {
 	report := FullDocumentDiagnosticReport{
 		Kind:     string(DocumentDiagnosticReportKindFull),
 		ResultID: stringPtr("result-456"),
-		Items: []protocol316.Diagnostic{
+		Items: []Diagnostic{
 			{
-				Range:    protocol316.Range{Start: protocol316.Position{Line: 1, Character: 0}, End: protocol316.Position{Line: 1, Character: 5}},
+				Range:    Range{Start: Position{Line: 1, Character: 0}, End: Position{Line: 1, Character: 5}},
 				Message:  "Test diagnostic",
-				Severity: func() *protocol316.DiagnosticSeverity { s := protocol316.DiagnosticSeverityError; return &s }(),
+				Severity: func() *DiagnosticSeverity { s := DiagnosticSeverityError; return &s }(),
 			},
 		},
 	}
@@ -392,15 +390,15 @@ func TestWorkspaceDiagnosticJSONSerialization(t *testing.T) {
 				FullDocumentDiagnosticReport: FullDocumentDiagnosticReport{
 					Kind:     string(DocumentDiagnosticReportKindFull),
 					ResultID: stringPtr("result-3"),
-					Items: []protocol316.Diagnostic{
+					Items: []Diagnostic{
 						{
-							Range:   protocol316.Range{Start: protocol316.Position{Line: 1, Character: 0}, End: protocol316.Position{Line: 1, Character: 5}},
+							Range:   Range{Start: Position{Line: 1, Character: 0}, End: Position{Line: 1, Character: 5}},
 							Message: "unused variable",
 						},
 					},
 				},
 				URI:     "file:///a.go",
-				Version: func() *protocol316.Integer { v := protocol316.Integer(3); return &v }(),
+				Version: func() *Integer { v := Integer(3); return &v }(),
 			},
 		},
 	}

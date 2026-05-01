@@ -2,7 +2,6 @@ package protocol
 
 import (
 	"github.com/bennypowers/glsp"
-	protocol316 "github.com/bennypowers/glsp/protocol_3_16"
 )
 
 /**
@@ -32,7 +31,7 @@ type DiagnosticClientCapabilities struct {
  * @since 3.17.0
  */
 type DiagnosticOptions struct {
-	protocol316.WorkDoneProgressOptions
+	WorkDoneProgressOptions
 	/**
 	 * An optional identifier under which the diagnostics are
 	 * managed by the client.
@@ -59,12 +58,12 @@ type DiagnosticOptions struct {
  * @since 3.17.0
  */
 type DiagnosticRegistrationOptions struct {
-	protocol316.TextDocumentRegistrationOptions
+	TextDocumentRegistrationOptions
 	DiagnosticOptions
-	protocol316.StaticRegistrationOptions
+	StaticRegistrationOptions
 }
 
-const MethodTextDocumentDiagnostic = protocol316.Method("textDocument/diagnostic")
+const MethodTextDocumentDiagnostic = "textDocument/diagnostic"
 
 type TextDocumentDiagnosticFunc func(context *glsp.Context, params *DocumentDiagnosticParams) (any, error)
 
@@ -74,13 +73,13 @@ type TextDocumentDiagnosticFunc func(context *glsp.Context, params *DocumentDiag
  * @since 3.17.0
  */
 type DocumentDiagnosticParams struct {
-	protocol316.WorkDoneProgressParams
-	protocol316.PartialResultParams
+	WorkDoneProgressParams
+	PartialResultParams
 
 	/**
 	 * The text document.
 	 */
-	TextDocument protocol316.TextDocumentIdentifier `json:"textDocument"`
+	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
 	/**
 	 * The additional identifier  provided during registration.
@@ -145,7 +144,7 @@ type FullDocumentDiagnosticReport struct {
 	/**
 	 * The actual items.
 	 */
-	Items []protocol316.Diagnostic `json:"items"`
+	Items []Diagnostic `json:"items"`
 }
 
 /**
@@ -186,7 +185,7 @@ type RelatedFullDocumentDiagnosticReport struct {
 	 *
 	 * @since 3.17.0
 	 */
-	RelatedDocuments map[protocol316.DocumentUri]any `json:"relatedDocuments,omitempty"`
+	RelatedDocuments map[DocumentUri]any `json:"relatedDocuments,omitempty"`
 }
 
 /**
@@ -205,7 +204,7 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
 	 *
 	 * @since 3.17.0
 	 */
-	RelatedDocuments map[protocol316.DocumentUri]any `json:"relatedDocuments,omitempty"`
+	RelatedDocuments map[DocumentUri]any `json:"relatedDocuments,omitempty"`
 }
 
 /**
@@ -214,7 +213,7 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
  * @since 3.17.0
  */
 type DocumentDiagnosticReportPartialResult struct {
-	RelatedDocuments map[protocol316.DocumentUri]any `json:"relatedDocuments"`
+	RelatedDocuments map[DocumentUri]any `json:"relatedDocuments"`
 }
 
 /**
@@ -246,7 +245,7 @@ type DiagnosticWorkspaceClientCapabilities struct {
 	RefreshSupport *bool `json:"refreshSupport,omitempty"`
 }
 
-const MethodWorkspaceDiagnostic = protocol316.Method("workspace/diagnostic")
+const MethodWorkspaceDiagnostic = "workspace/diagnostic"
 
 type WorkspaceDiagnosticFunc func(context *glsp.Context, params *WorkspaceDiagnosticParams) (*WorkspaceDiagnosticReport, error)
 
@@ -256,8 +255,8 @@ type WorkspaceDiagnosticFunc func(context *glsp.Context, params *WorkspaceDiagno
  * @since 3.17.0
  */
 type WorkspaceDiagnosticParams struct {
-	protocol316.WorkDoneProgressParams
-	protocol316.PartialResultParams
+	WorkDoneProgressParams
+	PartialResultParams
 
 	/**
 	 * The additional identifier provided during registration.
@@ -280,7 +279,7 @@ type PreviousResultId struct {
 	/**
 	 * The URI for which the client knows a result id.
 	 */
-	URI protocol316.DocumentUri `json:"uri"`
+	URI DocumentUri `json:"uri"`
 
 	/**
 	 * The value of the previous result id.
@@ -315,13 +314,13 @@ type WorkspaceFullDocumentDiagnosticReport struct {
 	/**
 	 * The URI for which diagnostic information is reported.
 	 */
-	URI protocol316.DocumentUri `json:"uri"`
+	URI DocumentUri `json:"uri"`
 
 	/**
 	 * The version number for which the diagnostics are reported.
 	 * If the document is not marked as open `null` can be provided.
 	 */
-	Version *protocol316.Integer `json:"version"`
+	Version *Integer `json:"version"`
 }
 
 /**
@@ -335,13 +334,13 @@ type WorkspaceUnchangedDocumentDiagnosticReport struct {
 	/**
 	 * The URI for which diagnostic information is reported.
 	 */
-	URI protocol316.DocumentUri `json:"uri"`
+	URI DocumentUri `json:"uri"`
 
 	/**
 	 * The version number for which the diagnostics are reported.
 	 * If the document is not marked as open `null` can be provided.
 	 */
-	Version *protocol316.Integer `json:"version"`
+	Version *Integer `json:"version"`
 }
 
 /**
@@ -355,7 +354,7 @@ type WorkspaceDiagnosticReportPartialResult struct {
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic_refresh
 
-const MethodWorkspaceDiagnosticRefresh = protocol316.Method("workspace/diagnostics/refresh")
+const MethodWorkspaceDiagnosticRefresh = "workspace/diagnostics/refresh"
 
 const ServerTextDocumentPublishDiagnostics = "textDocument/publishDiagnostics"
 
