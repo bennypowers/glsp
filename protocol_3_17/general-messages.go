@@ -7,7 +7,7 @@ import (
 	protocol316 "github.com/tliron/glsp/protocol_3_16"
 )
 
-// https://microsoft.github.io/language-server-protocol/specifications/specification-3-16#initialize
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize
 
 const MethodInitialize = protocol316.Method("initialize")
 
@@ -26,7 +26,74 @@ type InitializeParams struct {
 type ClientCapabilities struct {
 	protocol316.ClientCapabilities
 
+	/**
+	 * Text document specific client capabilities.
+	 */
 	TextDocument *TextDocumentClientCapabilities `json:"textDocument,omitempty"`
+
+	/**
+	 * Capabilities specific to the notebook document support.
+	 *
+	 * @since 3.17.0
+	 */
+	NotebookDocument *NotebookDocumentClientCapabilities `json:"notebookDocument,omitempty"`
+
+	/**
+	 * General client capabilities.
+	 *
+	 * @since 3.16.0
+	 */
+	General *GeneralClientCapabilities `json:"general,omitempty"`
+}
+
+/**
+ * General client capabilities.
+ *
+ * @since 3.16.0
+ */
+type GeneralClientCapabilities struct {
+	/**
+	 * Client capability that signals how the client
+	 * handles stale requests (e.g. a request
+	 * for which the client will not process the response
+	 * anymore since the information is outdated).
+	 *
+	 * @since 3.17.0
+	 */
+	StaleRequestSupport *struct {
+		/**
+		 * The client will actively cancel the request.
+		 */
+		Cancel bool `json:"cancel"`
+
+		/**
+		 * The list of requests for which the client
+		 * will retry the request if it receives a
+		 * response with error code `ContentModified`
+		 */
+		RetryOnContentModified []string `json:"retryOnContentModified"`
+	} `json:"staleRequestSupport,omitempty"`
+
+	/**
+	 * Client capabilities specific to regular expressions.
+	 *
+	 * @since 3.16.0
+	 */
+	RegularExpressions *RegularExpressionsClientCapabilities `json:"regularExpressions,omitempty"`
+
+	/**
+	 * Client capabilities specific to the client's markdown parser.
+	 *
+	 * @since 3.16.0
+	 */
+	Markdown *MarkdownClientCapabilities `json:"markdown,omitempty"`
+
+	/**
+	 * Client capabilities specific to the client's position encoding.
+	 *
+	 * @since 3.17.0
+	 */
+	PositionEncodings []PositionEncodingKind `json:"positionEncodings,omitempty"`
 }
 
 /**
@@ -41,6 +108,27 @@ type TextDocumentClientCapabilities struct {
 	 * @since 3.17.0
 	 */
 	Diagnostic *DiagnosticClientCapabilities `json:"diagnostic,omitempty"`
+
+	/**
+	 * Capabilities specific to the type hierarchy feature.
+	 *
+	 * @since 3.17.0
+	 */
+	TypeHierarchy *TypeHierarchyClientCapabilities `json:"typeHierarchy,omitempty"`
+
+	/**
+	 * Capabilities specific to the inline values feature.
+	 *
+	 * @since 3.17.0
+	 */
+	InlineValue *InlineValueClientCapabilities `json:"inlineValue,omitempty"`
+
+	/**
+	 * Capabilities specific to the inlay hint feature.
+	 *
+	 * @since 3.17.0
+	 */
+	InlayHint *InlayHintClientCapabilities `json:"inlayHint,omitempty"`
 }
 
 type ServerCapabilities struct {
@@ -52,6 +140,34 @@ type ServerCapabilities struct {
 	 * @since 3.17.0
 	 */
 	DiagnosticProvider any `json:"diagnosticProvider,omitempty"` // nil | DiagnosticOptions | DiagnosticRegistrationOptions
+
+	/**
+	 * The server provides type hierarchy support.
+	 *
+	 * @since 3.17.0
+	 */
+	TypeHierarchyProvider any `json:"typeHierarchyProvider,omitempty"` // nil | bool | TypeHierarchyOptions | TypeHierarchyRegistrationOptions
+
+	/**
+	 * The server provides inline values.
+	 *
+	 * @since 3.17.0
+	 */
+	InlineValueProvider any `json:"inlineValueProvider,omitempty"` // nil | bool | InlineValueOptions | InlineValueRegistrationOptions
+
+	/**
+	 * The server provides inlay hints.
+	 *
+	 * @since 3.17.0
+	 */
+	InlayHintProvider any `json:"inlayHintProvider,omitempty"` // nil | bool | InlayHintOptions | InlayHintRegistrationOptions
+
+	/**
+	 * Whether the server supports notebook document synchronization
+	 *
+	 * @since 3.17.0
+	 */
+	NotebookDocumentSync any `json:"notebookDocumentSync,omitempty"` // nil | NotebookDocumentSyncOptions | NotebookDocumentSyncRegistrationOptions
 }
 
 func (self *ServerCapabilities) UnmarshalJSON(data []byte) error {
@@ -85,7 +201,11 @@ func (self *ServerCapabilities) UnmarshalJSON(data []byte) error {
 		WorkspaceSymbolProvider          json.RawMessage                              `json:"workspaceSymbolProvider,omitempty"`    // nil | bool | WorkspaceSymbolOptions
 		Workspace                        *protocol316.ServerCapabilitiesWorkspace     `json:"workspace,omitempty"`
 		Experimental                     *any                                         `json:"experimental,omitempty"`
-		DiagnosticProvider               json.RawMessage                              `json:"diagnosticProvider,omitempty"` // nil | DiagnosticOptions | DiagnosticRegistrationOptions
+		DiagnosticProvider               json.RawMessage                              `json:"diagnosticProvider,omitempty"`    // nil | DiagnosticOptions | DiagnosticRegistrationOptions
+		TypeHierarchyProvider            json.RawMessage                              `json:"typeHierarchyProvider,omitempty"` // nil | bool | TypeHierarchyOptions | TypeHierarchyRegistrationOptions
+		InlineValueProvider              json.RawMessage                              `json:"inlineValueProvider,omitempty"`   // nil | bool | InlineValueOptions | InlineValueRegistrationOptions
+		InlayHintProvider                json.RawMessage                              `json:"inlayHintProvider,omitempty"`     // nil | bool | InlayHintOptions | InlayHintRegistrationOptions
+		NotebookDocumentSync             json.RawMessage                              `json:"notebookDocumentSync,omitempty"`  // nil | NotebookDocumentSyncOptions | NotebookDocumentSyncRegistrationOptions
 	}
 
 	if err := json.Unmarshal(data, &value); err == nil {
@@ -444,6 +564,77 @@ func (self *ServerCapabilities) UnmarshalJSON(data []byte) error {
 				var value_ DiagnosticRegistrationOptions
 				if err = json.Unmarshal(value.DiagnosticProvider, &value_); err == nil {
 					self.DiagnosticProvider = value_
+				} else {
+					return err
+				}
+			}
+		}
+
+		if value.TypeHierarchyProvider != nil {
+			var value_ bool
+			if err = json.Unmarshal(value.TypeHierarchyProvider, &value_); err == nil {
+				self.TypeHierarchyProvider = value_
+			} else {
+				var value_ TypeHierarchyOptions
+				if err = json.Unmarshal(value.TypeHierarchyProvider, &value_); err == nil {
+					self.TypeHierarchyProvider = value_
+				} else {
+					var value_ TypeHierarchyRegistrationOptions
+					if err = json.Unmarshal(value.TypeHierarchyProvider, &value_); err == nil {
+						self.TypeHierarchyProvider = value_
+					} else {
+						return err
+					}
+				}
+			}
+		}
+
+		if value.InlineValueProvider != nil {
+			var value_ bool
+			if err = json.Unmarshal(value.InlineValueProvider, &value_); err == nil {
+				self.InlineValueProvider = value_
+			} else {
+				var value_ InlineValueOptions
+				if err = json.Unmarshal(value.InlineValueProvider, &value_); err == nil {
+					self.InlineValueProvider = value_
+				} else {
+					var value_ InlineValueRegistrationOptions
+					if err = json.Unmarshal(value.InlineValueProvider, &value_); err == nil {
+						self.InlineValueProvider = value_
+					} else {
+						return err
+					}
+				}
+			}
+		}
+
+		if value.InlayHintProvider != nil {
+			var value_ bool
+			if err = json.Unmarshal(value.InlayHintProvider, &value_); err == nil {
+				self.InlayHintProvider = value_
+			} else {
+				var value_ InlayHintOptions
+				if err = json.Unmarshal(value.InlayHintProvider, &value_); err == nil {
+					self.InlayHintProvider = value_
+				} else {
+					var value_ InlayHintRegistrationOptions
+					if err = json.Unmarshal(value.InlayHintProvider, &value_); err == nil {
+						self.InlayHintProvider = value_
+					} else {
+						return err
+					}
+				}
+			}
+		}
+
+		if value.NotebookDocumentSync != nil {
+			var value_ NotebookDocumentSyncOptions
+			if err = json.Unmarshal(value.NotebookDocumentSync, &value_); err == nil {
+				self.NotebookDocumentSync = value_
+			} else {
+				var value_ NotebookDocumentSyncRegistrationOptions
+				if err = json.Unmarshal(value.NotebookDocumentSync, &value_); err == nil {
+					self.NotebookDocumentSync = value_
 				} else {
 					return err
 				}

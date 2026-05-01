@@ -186,7 +186,7 @@ type RelatedFullDocumentDiagnosticReport struct {
 	 *
 	 * @since 3.17.0
 	 */
-	RelatedDocuments map[protocol316.DocumentUri]interface{} `json:"relatedDocuments,omitempty"`
+	RelatedDocuments map[protocol316.DocumentUri]any `json:"relatedDocuments,omitempty"`
 }
 
 /**
@@ -205,7 +205,7 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
 	 *
 	 * @since 3.17.0
 	 */
-	RelatedDocuments map[protocol316.DocumentUri]interface{} `json:"relatedDocuments,omitempty"`
+	RelatedDocuments map[protocol316.DocumentUri]any `json:"relatedDocuments,omitempty"`
 }
 
 /**
@@ -214,7 +214,7 @@ type RelatedUnchangedDocumentDiagnosticReport struct {
  * @since 3.17.0
  */
 type DocumentDiagnosticReportPartialResult struct {
-	RelatedDocuments map[protocol316.DocumentUri]interface{} `json:"relatedDocuments"`
+	RelatedDocuments map[protocol316.DocumentUri]any `json:"relatedDocuments"`
 }
 
 /**
@@ -225,3 +225,134 @@ type DocumentDiagnosticReportPartialResult struct {
 type DiagnosticServerCancellationData struct {
 	RetriggerRequest bool `json:"retriggerRequest"`
 }
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#workspace_diagnostic
+
+/**
+ * Workspace client capabilities specific to diagnostic pull requests.
+ *
+ * @since 3.17.0
+ */
+type DiagnosticWorkspaceClientCapabilities struct {
+	/**
+	 * Whether the client implementation supports a refresh request sent from
+	 * the server to the client.
+	 *
+	 * Note that this event is global and will force the client to re-calculate
+	 * all pulled diagnostics for all open documents. It should be used with
+	 * absolute care and is useful for situation where a server for example
+	 * detects a project wide change that requires such a calculation.
+	 */
+	RefreshSupport *bool `json:"refreshSupport,omitempty"`
+}
+
+const MethodWorkspaceDiagnostic = protocol316.Method("workspace/diagnostic")
+
+type WorkspaceDiagnosticFunc func(context *glsp.Context, params *WorkspaceDiagnosticParams) (*WorkspaceDiagnosticReport, error)
+
+/**
+ * Parameters of the workspace diagnostic request.
+ *
+ * @since 3.17.0
+ */
+type WorkspaceDiagnosticParams struct {
+	protocol316.WorkDoneProgressParams
+	protocol316.PartialResultParams
+
+	/**
+	 * The additional identifier provided during registration.
+	 */
+	Identifier *string `json:"identifier,omitempty"`
+
+	/**
+	 * The currently known diagnostic reports with their
+	 * previous result ids.
+	 */
+	PreviousResultIds []PreviousResultId `json:"previousResultIds"`
+}
+
+/**
+ * A previous result id in a workspace pull request.
+ *
+ * @since 3.17.0
+ */
+type PreviousResultId struct {
+	/**
+	 * The URI for which the client knows a result id.
+	 */
+	URI protocol316.DocumentUri `json:"uri"`
+
+	/**
+	 * The value of the previous result id.
+	 */
+	Value string `json:"value"`
+}
+
+/**
+ * A workspace diagnostic report.
+ *
+ * @since 3.17.0
+ */
+type WorkspaceDiagnosticReport struct {
+	Items []WorkspaceDocumentDiagnosticReport `json:"items"`
+}
+
+/**
+ * A workspace diagnostic document report.
+ *
+ * @since 3.17.0
+ */
+type WorkspaceDocumentDiagnosticReport any // WorkspaceFullDocumentDiagnosticReport | WorkspaceUnchangedDocumentDiagnosticReport
+
+/**
+ * A full document diagnostic report for a workspace diagnostic result.
+ *
+ * @since 3.17.0
+ */
+type WorkspaceFullDocumentDiagnosticReport struct {
+	FullDocumentDiagnosticReport
+
+	/**
+	 * The URI for which diagnostic information is reported.
+	 */
+	URI protocol316.DocumentUri `json:"uri"`
+
+	/**
+	 * The version number for which the diagnostics are reported.
+	 * If the document is not marked as open `null` can be provided.
+	 */
+	Version *protocol316.Integer `json:"version"`
+}
+
+/**
+ * An unchanged document diagnostic report for a workspace diagnostic result.
+ *
+ * @since 3.17.0
+ */
+type WorkspaceUnchangedDocumentDiagnosticReport struct {
+	UnchangedDocumentDiagnosticReport
+
+	/**
+	 * The URI for which diagnostic information is reported.
+	 */
+	URI protocol316.DocumentUri `json:"uri"`
+
+	/**
+	 * The version number for which the diagnostics are reported.
+	 * If the document is not marked as open `null` can be provided.
+	 */
+	Version *protocol316.Integer `json:"version"`
+}
+
+/**
+ * A partial result for a workspace diagnostic report.
+ *
+ * @since 3.17.0
+ */
+type WorkspaceDiagnosticReportPartialResult struct {
+	Items []WorkspaceDocumentDiagnosticReport `json:"items"`
+}
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic_refresh
+
+const MethodWorkspaceDiagnosticRefresh = protocol316.Method("workspace/diagnostics/refresh")

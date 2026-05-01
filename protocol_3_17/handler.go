@@ -14,6 +14,25 @@ type Handler struct {
 
 	Initialize             InitializeFunc
 	TextDocumentDiagnostic TextDocumentDiagnosticFunc
+	WorkspaceDiagnostic    WorkspaceDiagnosticFunc
+
+	// Type Hierarchy - @since 3.17.0
+	TextDocumentPrepareTypeHierarchy TextDocumentPrepareTypeHierarchyFunc
+	TypeHierarchySupertypes          TypeHierarchySupertypesFunc
+	TypeHierarchySubtypes            TypeHierarchySubtypesFunc
+
+	// Inline Value - @since 3.17.0
+	TextDocumentInlineValue TextDocumentInlineValueFunc
+
+	// Inlay Hint - @since 3.17.0
+	TextDocumentInlayHint TextDocumentInlayHintFunc
+	InlayHintResolve      InlayHintResolveFunc
+
+	// Notebook Document - @since 3.17.0
+	NotebookDocumentDidOpen   NotebookDocumentDidOpenFunc
+	NotebookDocumentDidChange NotebookDocumentDidChangeFunc
+	NotebookDocumentDidSave   NotebookDocumentDidSaveFunc
+	NotebookDocumentDidClose  NotebookDocumentDidCloseFunc
 
 	initialized bool
 	lock        sync.Mutex
@@ -649,6 +668,120 @@ func (self *Handler) Handle(context *glsp.Context) (r any, validMethod bool, val
 			}
 		}
 
+	case MethodWorkspaceDiagnostic:
+		if self.WorkspaceDiagnostic != nil {
+			validMethod = true
+			var params WorkspaceDiagnosticParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.WorkspaceDiagnostic(context, &params)
+			}
+		}
+
+	// Type Hierarchy - @since 3.17.0
+	case MethodTextDocumentPrepareTypeHierarchy:
+		if self.TextDocumentPrepareTypeHierarchy != nil {
+			validMethod = true
+			var params TypeHierarchyPrepareParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.TextDocumentPrepareTypeHierarchy(context, &params)
+			}
+		}
+
+	case MethodTypeHierarchySupertypes:
+		if self.TypeHierarchySupertypes != nil {
+			validMethod = true
+			var params TypeHierarchySupertypesParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.TypeHierarchySupertypes(context, &params)
+			}
+		}
+
+	case MethodTypeHierarchySubtypes:
+		if self.TypeHierarchySubtypes != nil {
+			validMethod = true
+			var params TypeHierarchySubtypesParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.TypeHierarchySubtypes(context, &params)
+			}
+		}
+
+	// Inline Value - @since 3.17.0
+	case MethodTextDocumentInlineValue:
+		if self.TextDocumentInlineValue != nil {
+			validMethod = true
+			var params InlineValueParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.TextDocumentInlineValue(context, &params)
+			}
+		}
+
+	// Inlay Hint - @since 3.17.0
+	case MethodTextDocumentInlayHint:
+		if self.TextDocumentInlayHint != nil {
+			validMethod = true
+			var params InlayHintParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.TextDocumentInlayHint(context, &params)
+			}
+		}
+
+	case MethodInlayHintResolve:
+		if self.InlayHintResolve != nil {
+			validMethod = true
+			var params InlayHint
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				r, err = self.InlayHintResolve(context, &params)
+			}
+		}
+
+	// Notebook Document - @since 3.17.0
+	case MethodNotebookDocumentDidOpen:
+		if self.NotebookDocumentDidOpen != nil {
+			validMethod = true
+			var params DidOpenNotebookDocumentParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				err = self.NotebookDocumentDidOpen(context, &params)
+			}
+		}
+
+	case MethodNotebookDocumentDidChange:
+		if self.NotebookDocumentDidChange != nil {
+			validMethod = true
+			var params DidChangeNotebookDocumentParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				err = self.NotebookDocumentDidChange(context, &params)
+			}
+		}
+
+	case MethodNotebookDocumentDidSave:
+		if self.NotebookDocumentDidSave != nil {
+			validMethod = true
+			var params DidSaveNotebookDocumentParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				err = self.NotebookDocumentDidSave(context, &params)
+			}
+		}
+
+	case MethodNotebookDocumentDidClose:
+		if self.NotebookDocumentDidClose != nil {
+			validMethod = true
+			var params DidCloseNotebookDocumentParams
+			if err = json.Unmarshal(context.Params, &params); err == nil {
+				validParams = true
+				err = self.NotebookDocumentDidClose(context, &params)
+			}
+		}
+
 	default:
 		if self.CustomRequest != nil {
 			if handler, ok := self.CustomRequest[context.Method]; ok && (handler.Func != nil) {
@@ -828,8 +961,6 @@ func (self *Handler) CreateServerCapabilities() ServerCapabilities {
 		capabilities.SemanticTokensProvider.(*protocol316.SemanticTokensOptions).Range = true
 	}
 
-	// TODO: self.TextDocumentSemanticTokensRefresh?
-
 	if self.TextDocumentMoniker != nil {
 		capabilities.MonikerProvider = true
 	}
@@ -915,8 +1046,40 @@ func (self *Handler) CreateServerCapabilities() ServerCapabilities {
 	if self.TextDocumentDiagnostic != nil {
 		capabilities.DiagnosticProvider = DiagnosticOptions{
 			InterFileDependencies: true,
-			WorkspaceDiagnostics:  false,
+			WorkspaceDiagnostics:  self.WorkspaceDiagnostic != nil,
 		}
+	}
+
+	// Type Hierarchy - @since 3.17.0
+	if self.TextDocumentPrepareTypeHierarchy != nil {
+		capabilities.TypeHierarchyProvider = true
+	}
+
+	// Inline Value - @since 3.17.0
+	if self.TextDocumentInlineValue != nil {
+		capabilities.InlineValueProvider = true
+	}
+
+	// Inlay Hint - @since 3.17.0
+	if self.TextDocumentInlayHint != nil {
+		capabilities.InlayHintProvider = &InlayHintOptions{}
+	}
+
+	// Notebook Document - @since 3.17.0
+	if self.NotebookDocumentDidOpen != nil || self.NotebookDocumentDidChange != nil ||
+		self.NotebookDocumentDidSave != nil || self.NotebookDocumentDidClose != nil {
+		// Basic notebook sync support - can be customized as needed
+		capabilities.NotebookDocumentSync = &NotebookDocumentSyncOptions{
+			NotebookSelector: []NotebookSelector{
+				{
+					Notebook: "*", // Match all notebook types by default
+				},
+			},
+		}
+	}
+
+	if self.TextDocumentInlayHint != nil {
+		capabilities.InlayHintProvider = true
 	}
 
 	return capabilities
