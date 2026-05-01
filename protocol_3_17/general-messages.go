@@ -199,7 +199,7 @@ func (self *ServerCapabilities) UnmarshalJSON(data []byte) error {
 		SemanticTokensProvider           json.RawMessage                              `json:"semanticTokensProvider,omitempty"`     // nil | SemanticTokensOptions | SemanticTokensRegistrationOptions
 		MonikerProvider                  json.RawMessage                              `json:"monikerProvider,omitempty"`            // nil | bool | MonikerOptions | MonikerRegistrationOptions
 		WorkspaceSymbolProvider          json.RawMessage                              `json:"workspaceSymbolProvider,omitempty"`    // nil | bool | WorkspaceSymbolOptions
-		Workspace                        *protocol316.ServerCapabilitiesWorkspace     `json:"workspace,omitempty"`
+		Workspace                        *ServerCapabilitiesWorkspace     `json:"workspace,omitempty"`
 		Experimental                     *any                                         `json:"experimental,omitempty"`
 		DiagnosticProvider               json.RawMessage                              `json:"diagnosticProvider,omitempty"`    // nil | DiagnosticOptions | DiagnosticRegistrationOptions
 		TypeHierarchyProvider            json.RawMessage                              `json:"typeHierarchyProvider,omitempty"` // nil | bool | TypeHierarchyOptions | TypeHierarchyRegistrationOptions
@@ -658,5 +658,12 @@ type InitializeResult struct {
 	 *
 	 * @since 3.15.0
 	 */
-	ServerInfo *protocol316.InitializeResultServerInfo `json:"serverInfo,omitempty"`
+	ServerInfo *InitializeResultServerInfo `json:"serverInfo,omitempty"`
 }
+
+type InitializedParams = protocol316.InitializedParams
+type SetTraceParams = protocol316.SetTraceParams
+type LogTraceParams = protocol316.LogTraceParams
+type InitializeResultServerInfo = protocol316.InitializeResultServerInfo
+type ServerCapabilitiesWorkspace = protocol316.ServerCapabilitiesWorkspace
+type ServerCapabilitiesWorkspaceFileOperations = protocol316.ServerCapabilitiesWorkspaceFileOperations
