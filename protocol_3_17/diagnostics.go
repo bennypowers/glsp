@@ -36,7 +36,7 @@ type DiagnosticOptions struct {
 	 * An optional identifier under which the diagnostics are
 	 * managed by the client.
 	 */
-	Identifier *string `json:"identifier"`
+	Identifier *string `json:"identifier,omitempty"`
 
 	/**
 	 * Whether the language has inter file dependencies meaning that
